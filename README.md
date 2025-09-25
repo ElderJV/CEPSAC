@@ -20,111 +20,158 @@ API para gestión de usuarios, cursos, matrículas y pagos.
   - [Extras Frontend / Reportes](#12-extras-frontend--reportes)
 
 ## Convenciones
-- **Base URL**: `http://localhost:8080`
+- **Base URL**: `http://localhost:PUERTO/api`
 - **Formato**: JSON (`Content-Type: application/json`)
 - **Respuestas**: usar códigos HTTP estándar.
-- A menos que se indique lo contrario, los `POST` aceptan un `body` JSON con parámetros.
+- Todos los `POST` requieren un `body` JSON con parámetros.
 
 ## Autenticación
-- `POST /auth/login`
+- `POST /api/auth/login`
   Body:
   ```json
-  { "correo": "alejandrocastillo@gmail.com", "password": "********" }
+  { "correo": "user@dominio.com", "password": "********" }
   ```
 
 ## Endpoints
 
 ### 1. Usuarios
-- `GET /usuarios/listar` — Listar todos los usuarios
-- `POST /usuarios/obtener` — Detalle de un usuario
+- `GET /api/usuarios/listar` — Listar todos los usuarios
+- `POST /api/usuarios/obtener` — Detalle de un usuario
   Body: `{ "idUsuario": 5 }`
-- `POST /usuarios/crear` — Crear usuario
-- `POST /usuarios/actualizar` — Actualizar usuario
-- `POST /usuarios/eliminar` — Eliminar usuario
-- `POST /usuarios/matriculas` — Matrículas de un usuario
+- `POST /api/usuarios/crear` — Crear usuario
+  Body: `{ "nombre": "Juan", "apellido": "Pérez", "correo": "juan@email.com", "password": "123456", "rol": "Alumno", "numeroCelular": "987654321", "numeroIdentificacion": "12345678" }`
+- `POST /api/usuarios/actualizar` — Actualizar usuario
+  Body: `{ "idUsuario": 5, "nombre": "Juan Carlos", "apellido": "Pérez García" }`
+- `POST /api/usuarios/eliminar` — Eliminar usuario
+  Body: `{ "idUsuario": 5 }`
+- `POST /api/usuarios/matriculas` — Matrículas de un usuario
   Body: `{ "idUsuario": 7 }`
-- `POST /usuarios/pagos` — Pagos de un usuario
+- `POST /api/usuarios/pagos` — Pagos de un usuario
+  Body: `{ "idUsuario": 7 }`
 
 ### 2. Países
-- `GET /paises/listar`
-- `POST /paises/obtener`
-- `POST /paises/crear`
-- `POST /paises/actualizar`
-- `POST /paises/eliminar`
+- `GET /api/paises/listar`
+- `POST /api/paises/obtener`
+  Body: `{ "idPais": 1 }`
+- `POST /api/paises/crear`
+  Body: `{ "nombre": "Perú", "codigo": "+51" }`
+- `POST /api/paises/actualizar`
+  Body: `{ "idPais": 1, "nombre": "República del Perú", "codigo": "+51" }`
+- `POST /api/paises/eliminar`
+  Body: `{ "idPais": 1 }`
 
 ### 3. Tipos de Identificación
-- `GET /tipos-identificacion/listar`
-- `POST /tipos-identificacion/obtener`
-- `POST /tipos-identificacion/crear`
-- `POST /tipos-identificacion/actualizar`
-- `POST /tipos-identificacion/eliminar`
+- `GET /api/tipos-identificacion/listar`
+- `POST /api/tipos-identificacion/obtener`
+  Body: `{ "idTipoIdentificacion": 1 }`
+- `POST /api/tipos-identificacion/crear`
+  Body: `{ "nombre": "DNI" }`
+- `POST /api/tipos-identificacion/actualizar`
+  Body: `{ "idTipoIdentificacion": 1, "nombre": "Documento Nacional de Identidad" }`
+- `POST /api/tipos-identificacion/eliminar`
+  Body: `{ "idTipoIdentificacion": 1 }`
 
 ### 4. Categorías
-- `GET /categorias/listar`
-- `POST /categorias/obtener`
-- `POST /categorias/crear`
-- `POST /categorias/actualizar`
-- `POST /categorias/eliminar`
+- `GET /api/categorias/listar`
+- `POST /api/categorias/obtener`
+  Body: `{ "idCategoria": 1 }`
+- `POST /api/categorias/crear`
+  Body: `{ "nombre": "Programación", "descripcion": "Cursos de desarrollo de software" }`
+- `POST /api/categorias/actualizar`
+  Body: `{ "idCategoria": 1, "nombre": "Desarrollo de Software", "descripcion": "Cursos de programación y desarrollo" }`
+- `POST /api/categorias/eliminar`
+  Body: `{ "idCategoria": 1 }`
 
 ### 5. Cursos / Diplomados
-- `GET /cursos/listar`
-- `POST /cursos/obtener`
-- `POST /cursos/crear`
-- `POST /cursos/actualizar`
-- `POST /cursos/eliminar`
-- `POST /cursos/programaciones` — Listar programaciones de un curso
+- `GET /api/cursos/listar`
+- `POST /api/cursos/obtener`
+  Body: `{ "idCursoDiplomado": 1 }`
+- `POST /api/cursos/crear`
+  Body: `{ "titulo": "Java para Principiantes", "descripcion": "Curso introductorio a Java", "tipo": false, "otorgaCertificado": true, "idCategoria": 1 }`
+- `POST /api/cursos/actualizar`
+  Body: `{ "idCursoDiplomado": 1, "titulo": "Java desde Cero", "descripcion": "Curso completo de Java" }`
+- `POST /api/cursos/eliminar`
+  Body: `{ "idCursoDiplomado": 1 }`
+- `POST /api/cursos/programaciones` — Listar programaciones de un curso
+  Body: `{ "idCursoDiplomado": 1 }`
 
 ### 6. Programaciones de Curso
-- `GET /programaciones/listar`
-- `POST /programaciones/obtener`
-- `POST /programaciones/crear`
-- `POST /programaciones/actualizar`
-- `POST /programaciones/eliminar`
-- `POST /programaciones/matriculas` — Matrículas de una programación
+- `GET /api/programaciones/listar`
+- `POST /api/programaciones/obtener`
+  Body: `{ "idAccesoCurso": 1 }`
+- `POST /api/programaciones/crear`
+  Body: `{ "modalidad": "VIRTUAL", "duracionCurso": 40.0, "fechaInicio": "2025-02-01", "fechaFin": "2025-03-15", "idCursoDiplomado": 1 }`
+- `POST /api/programaciones/actualizar`
+  Body: `{ "idAccesoCurso": 1, "modalidad": "PRESENCIAL", "duracionCurso": 35.0 }`
+- `POST /api/programaciones/eliminar`
+  Body: `{ "idAccesoCurso": 1 }`
+- `POST /api/programaciones/matriculas` — Matrículas de una programación
+  Body: `{ "idAccesoCurso": 1 }`
 
 ### 7. Matrículas
-- `GET /matriculas/listar`
-- `POST /matriculas/obtener`
-- `POST /matriculas/crear`
-- `POST /matriculas/actualizar`
-- `POST /matriculas/eliminar`
-- `POST /matriculas/cancelar`
-- `POST /matriculas/pagos` — Pagos de una matrícula
+- `GET /api/matriculas/listar`
+- `POST /api/matriculas/obtener`
+  Body: `{ "idMatricula": 1 }`
+- `POST /api/matriculas/crear`
+  Body: `{ "idProgramacionCurso": 1, "idAlumno": 5, "monto": 500.00 }`
+- `POST /api/matriculas/actualizar`
+  Body: `{ "idMatricula": 1, "estado": "pagado", "monto": 450.00 }`
+- `POST /api/matriculas/eliminar`
+  Body: `{ "idMatricula": 1 }`
+- `POST /api/matriculas/cancelar`
+  Body: `{ "idMatricula": 1 }`
+- `POST /api/matriculas/pagos` — Pagos de una matrícula
+  Body: `{ "idMatricula": 1 }`
 
 ### 8. Pagos
-- `GET /pagos/listar`
-- `POST /pagos/obtener`
-- `POST /pagos/crear`
-- `POST /pagos/actualizar`
-- `POST /pagos/eliminar`
+- `GET /api/pagos/listar`
+- `POST /api/pagos/obtener`
+  Body: `{ "idPago": 1 }`
+- `POST /api/pagos/crear`
+  Body: `{ "idMatricula": 1, "idMetodoPago": 1, "monto": 250.00, "numeroCuota": 1 }`
+- `POST /api/pagos/actualizar`
+  Body: `{ "idPago": 1, "monto": 200.00 }`
+- `POST /api/pagos/eliminar`
+  Body: `{ "idPago": 1 }`
 
 ### 9. Métodos de Pago
-- `GET /metodos-pago/listar`
-- `POST /metodos-pago/obtener`
-- `POST /metodos-pago/crear`
-- `POST /metodos-pago/actualizar`
-- `POST /metodos-pago/eliminar`
+- `GET /api/metodos-pago/listar`
+- `POST /api/metodos-pago/obtener`
+  Body: `{ "idMetodoPago": 1 }`
+- `POST /api/metodos-pago/crear`
+  Body: `{ "tipoMetodo": "TRANSFERENCIA", "descripcion": "Transferencia bancaria", "requisitos": "Adjuntar comprobante" }`
+- `POST /api/metodos-pago/actualizar`
+  Body: `{ "idMetodoPago": 1, "descripcion": "Transferencia bancaria nacional" }`
+- `POST /api/metodos-pago/eliminar`
+  Body: `{ "idMetodoPago": 1 }`
 
 ### 10. Descuentos
-- `GET /descuentos/listar`
-- `POST /descuentos/obtener`
-- `POST /descuentos/crear`
-- `POST /descuentos/actualizar`
-- `POST /descuentos/eliminar`
+- `GET /api/descuentos/listar`
+- `POST /api/descuentos/obtener`
+  Body: `{ "idDescuento": 1 }`
+- `POST /api/descuentos/crear`
+  Body: `{ "tipoDescuento": "PORCENTAJE", "valor": 15.00, "vigente": true, "fechaInicio": "2025-01-01", "fechaFin": "2025-12-31" }`
+- `POST /api/descuentos/actualizar`
+  Body: `{ "idDescuento": 1, "valor": 20.00, "vigente": false }`
+- `POST /api/descuentos/eliminar`
+  Body: `{ "idDescuento": 1 }`
 
 ### 11. Sponsors
-- `GET /sponsors/listar`
-- `POST /sponsors/obtener`
-- `POST /sponsors/crear`
-- `POST /sponsors/actualizar`
-- `POST /sponsors/eliminar`
+- `GET /api/sponsors/listar`
+- `POST /api/sponsors/obtener`
+  Body: `{ "idSponsor": 1 }`
+- `POST /api/sponsors/crear`
+  Body: `{ "nombre": "Empresa ABC", "urlSponsor": "https://empresa-abc.com" }`
+- `POST /api/sponsors/actualizar`
+  Body: `{ "idSponsor": 1, "nombre": "Empresa ABC S.A.C.", "urlSponsor": "https://www.empresa-abc.com" }`
+- `POST /api/sponsors/eliminar`
+  Body: `{ "idSponsor": 1 }`
 
 ### 12. Extras Frontend / Reportes
-- `GET /dashboard/estadisticas` — Métricas generales
-- `POST /reportes/pagos`
+- `GET /api/dashboard/estadisticas` — Métricas generales
+- `POST /api/reportes/pagos`
   Body: `{ "desde": "2025-01-01", "hasta": "2025-01-31" }`
-- `POST /reportes/matriculas`
+- `POST /api/reportes/matriculas`
   Body: `{ "cursoId": 2 }`
 
 ---
-Sugerencia: agrega ejemplos de request/response por endpoint según vayas estabilizando los contratos.
