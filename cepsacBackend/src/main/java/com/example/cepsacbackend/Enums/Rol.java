@@ -1,8 +1,8 @@
-package com.example.cepsacbackend.Entity.Enums;
+package com.example.cepsacbackend.Enums;
 
 public enum Rol {
-    Administrador,
-    Alumno,
-    Docente,
+    administrador,
+    alumno,
+    docente,
     Otro
 }

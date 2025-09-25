@@ -26,7 +26,7 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IdUsuario")
-    private Integer idUsuario;
+    private Short idUsuario;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Rol")

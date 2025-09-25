@@ -1,14 +1,16 @@
 package com.example.cepsacbackend.Repository;
 
+import com.example.cepsacbackend.Entity.Usuario;
+import com.example.cepsacbackend.Enums.EstadoUsuario;
+
+
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import com.example.cepsacbackend.Entity.Usuario;
-
-public interface UsuarioRepository extends JpaRepository<Usuario, Short>{
-    @Override
-    default List<Usuario> findAll() {
-        throw new UnsupportedOperationException("Error al traer Usuarios");
-    }
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Short> {
+    Usuario findByCorreo(String correo);
+    List<Usuario> findByEstado(EstadoUsuario estado);
 }
