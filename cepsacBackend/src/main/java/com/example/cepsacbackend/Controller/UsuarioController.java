@@ -1,44 +1,75 @@
 package com.example.cepsacbackend.Controller;
 
-import com.example.cepsacbackend.Entity.Usuario;
-import com.example.cepsacbackend.Repository.UsuarioRepository;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioRequestDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioResponseDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateRequestDTO;
+import com.example.cepsacbackend.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
     @Autowired
-    private UsuarioRepository repouser;
+    private UsuarioService usuarioService;
 
     @GetMapping("/listar")
-    public List<Usuario> listarUsuarios() {
-        return repouser.findAll();
+    public List<UsuarioResponseDTO> listarUsuarios() {
+        return usuarioService.listarUsuarios();
     }
 
-    @PostMapping("/obtener")
-    public Usuario obtenerUsuario(@RequestBody Integer idUsuario) {
-        Optional<Usuario> usuario = repouser.findById(idUsuario.shortValue());
-        return usuario.orElse(null);
+    @GetMapping("/obtener/{idUsuario}")
+    public ResponseEntity<UsuarioResponseDTO> obtenerUsuario(@PathVariable Short idUsuario) {
+        try {
+            UsuarioResponseDTO usuarioDTO = usuarioService.obtenerUsuario(idUsuario);
+            return ResponseEntity.ok(usuarioDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/crear")
-    public Usuario crearUsuario(@RequestBody Usuario usuario) {
-        return repouser.save(usuario);
+    public ResponseEntity<UsuarioResponseDTO> crearUsuario(@RequestBody UsuarioRequestDTO dto) {
+        try {
+            UsuarioResponseDTO nuevoUsuarioDTO = usuarioService.crearUsuario(dto);
+            return new ResponseEntity<>(nuevoUsuarioDTO, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/actualizar")
-    public Usuario actualizarUsuario(@RequestBody Usuario usuario) {
-        return repouser.save(usuario);
+    @PutMapping("/actualizar")
+    public ResponseEntity<UsuarioResponseDTO> actualizarUsuario(@RequestBody UsuarioRequestDTO dto) {
+        try {
+            UsuarioResponseDTO usuarioActualizadoDTO = usuarioService.actualizarUsuario(dto);
+            return ResponseEntity.ok(usuarioActualizadoDTO);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/eliminar")
-    public String eliminarUsuario(@RequestBody Integer idUsuario) {
-        repouser.deleteById(idUsuario.shortValue());
-        return "Usuario eliminado correctamente";
+    @PatchMapping("/actualizar-parcial")
+    public ResponseEntity<UsuarioResponseDTO> actualizarUsuarioParcialmente(@RequestBody UsuarioUpdateRequestDTO dto) {
+        try {
+            UsuarioResponseDTO usuarioActualizadoDTO = usuarioService.actualizarUsuarioParcialmente(dto);
+            return ResponseEntity.ok(usuarioActualizadoDTO);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/eliminar/{idUsuario}")
+    public ResponseEntity<String> eliminarUsuario(@PathVariable Short idUsuario) {
+        try {
+            usuarioService.eliminarUsuario(idUsuario);
+            return ResponseEntity.ok("Usuario eliminado correctamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

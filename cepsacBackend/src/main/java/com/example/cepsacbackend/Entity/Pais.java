@@ -11,19 +11,21 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pais {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IdPais")
-    private Integer idPais;
-    
+    private Short idPais;
+
     @Column(name = "Nombre", nullable = false, length = 50)
     private String nombre;
-    
-    @Column(name = "Codigo", length = 5)
+
+    @Column(name = "Codigo", length = 2)
     private String codigo;
-    
-    // Relación bidireccional con Usuario
+
+    @Column(name = "CodigoTelefono", length = 5)
+    private String codigotelefono;
+
     @OneToMany(mappedBy = "pais", fetch = FetchType.LAZY)
     private List<Usuario> usuarios;
 }

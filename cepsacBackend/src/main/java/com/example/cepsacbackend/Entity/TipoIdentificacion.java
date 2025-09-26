@@ -15,12 +15,11 @@ public class TipoIdentificacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IdTipoIdentificacion")
-    private Integer idTipoIdentificacion;
+    private Short idTipoIdentificacion;
 
     @Column(name = "Nombre", nullable = false, length = 50)
     private String nombre;
 
-    // Relación bidireccional con Usuario
     @OneToMany(mappedBy = "tipoIdentificacion", fetch = FetchType.LAZY)
     private List<Usuario> usuarios;
 }

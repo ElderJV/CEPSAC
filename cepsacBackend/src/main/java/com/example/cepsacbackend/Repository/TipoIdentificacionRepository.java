@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TipoIdentificacionRepository extends JpaRepository<TipoIdentificacion, Short> {
-    
+    java.util.Optional<TipoIdentificacion> findByNombre(String nombre);
 }
