@@ -2,7 +2,7 @@ package com.example.cepsacbackend.Service;
 
 import com.example.cepsacbackend.Dto.Usuario.UsuarioRequestDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioResponseDTO;
-import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateRequestDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateDTO;
 
 import java.util.List;
 
@@ -14,6 +14,6 @@ public interface UsuarioService {
     // metodo para PUT
     UsuarioResponseDTO actualizarUsuario(UsuarioRequestDTO dto);
     // metodo para PATCH
-    UsuarioResponseDTO actualizarUsuarioParcialmente(UsuarioUpdateRequestDTO dto);
+    UsuarioResponseDTO actualizarUsuarioParcialmente(UsuarioUpdateDTO dto);
     void eliminarUsuario(Short idUsuario);
 }

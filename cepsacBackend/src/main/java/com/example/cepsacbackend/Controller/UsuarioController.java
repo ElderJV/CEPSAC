@@ -2,7 +2,7 @@ package com.example.cepsacbackend.Controller;
 
 import com.example.cepsacbackend.Dto.Usuario.UsuarioRequestDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioResponseDTO;
-import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateRequestDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateDTO;
 import com.example.cepsacbackend.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,7 +54,7 @@ public class UsuarioController {
     }
 
     @PatchMapping("/actualizar-parcial")
-    public ResponseEntity<UsuarioResponseDTO> actualizarUsuarioParcialmente(@RequestBody UsuarioUpdateRequestDTO dto) {
+    public ResponseEntity<UsuarioResponseDTO> actualizarUsuarioParcialmente(@RequestBody UsuarioUpdateDTO dto) {
         try {
             UsuarioResponseDTO usuarioActualizadoDTO = usuarioService.actualizarUsuarioParcialmente(dto);
             return ResponseEntity.ok(usuarioActualizadoDTO);

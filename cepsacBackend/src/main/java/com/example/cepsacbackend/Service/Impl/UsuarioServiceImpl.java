@@ -2,7 +2,7 @@ package com.example.cepsacbackend.Service.Impl;
 
 import com.example.cepsacbackend.Dto.Usuario.UsuarioRequestDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioResponseDTO;
-import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateRequestDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateDTO;
 import com.example.cepsacbackend.Entity.Pais;
 import com.example.cepsacbackend.Entity.TipoIdentificacion;
 import com.example.cepsacbackend.Entity.Usuario;
@@ -49,12 +49,14 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UsuarioResponseDTO> listarUsuarios() {
         List<Usuario> usuarios = repouser.findAll();
         return usuarioMapper.toResponseDTOList(usuarios);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UsuarioResponseDTO obtenerUsuario(Short idUsuario) {
         Usuario usuario = repouser.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
@@ -64,17 +66,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public UsuarioResponseDTO crearUsuario(UsuarioRequestDTO dto) {
-        Usuario usuario = new Usuario();
+        Usuario usuario = usuarioMapper.toEntity(dto);
         usuario.setPais(resolverPais(dto.getNombrePais()));
         usuario.setTipoIdentificacion(resolverTipoIdentificacion(dto.getIdTipoIdentificacion()));
-        usuario.setRol(dto.getRol());
-        usuario.setNombre(dto.getNombre());
-        usuario.setApellido(dto.getApellido());
-        usuario.setCorreo(dto.getCorreo());
-        usuario.setPassword(dto.getPassword());
-        usuario.setEstado(dto.getEstado());
-        usuario.setNumeroCelular(dto.getNumeroCelular());
-        usuario.setNumeroIdentificacion(dto.getNumeroIdentificacion());
         Usuario nuevoUsuario = repouser.save(usuario);
         return usuarioMapper.toResponseDTO(nuevoUsuario);
     }
@@ -84,56 +78,19 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuarioResponseDTO actualizarUsuario(UsuarioRequestDTO dto) {
         Usuario usuarioExistente = repouser.findById(dto.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + dto.getIdUsuario()));
-
+        usuarioMapper.updateEntityFromRequestDTO(dto, usuarioExistente);
         usuarioExistente.setPais(resolverPais(dto.getNombrePais()));
         usuarioExistente.setTipoIdentificacion(resolverTipoIdentificacion(dto.getIdTipoIdentificacion()));
-        usuarioExistente.setRol(dto.getRol());
-        usuarioExistente.setNombre(dto.getNombre());
-        usuarioExistente.setApellido(dto.getApellido());
-        usuarioExistente.setCorreo(dto.getCorreo());
-
-        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-            usuarioExistente.setPassword(dto.getPassword());
-        }
-
-        usuarioExistente.setEstado(dto.getEstado());
-        usuarioExistente.setNumeroCelular(dto.getNumeroCelular());
-        usuarioExistente.setNumeroIdentificacion(dto.getNumeroIdentificacion());
-
         Usuario usuarioActualizado = repouser.save(usuarioExistente);
         return usuarioMapper.toResponseDTO(usuarioActualizado);
     }
 
     @Override
     @Transactional
-    public UsuarioResponseDTO actualizarUsuarioParcialmente(UsuarioUpdateRequestDTO dto) {
+    public UsuarioResponseDTO actualizarUsuarioParcialmente(UsuarioUpdateDTO dto) {
         Usuario usuarioExistente = repouser.findById(dto.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + dto.getIdUsuario()));
-
-        if (dto.getRol() != null) {
-            usuarioExistente.setRol(dto.getRol());
-        }
-        if (dto.getNombre() != null) {
-            usuarioExistente.setNombre(dto.getNombre());
-        }
-        if (dto.getApellido() != null) {
-            usuarioExistente.setApellido(dto.getApellido());
-        }
-        if (dto.getCorreo() != null) {
-            usuarioExistente.setCorreo(dto.getCorreo());
-        }
-        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-            usuarioExistente.setPassword(dto.getPassword());
-        }
-        if (dto.getEstado() != null) {
-            usuarioExistente.setEstado(dto.getEstado());
-        }
-        if (dto.getNumeroCelular() != null) {
-            usuarioExistente.setNumeroCelular(dto.getNumeroCelular());
-        }
-        if (dto.getNumeroIdentificacion() != null) {
-            usuarioExistente.setNumeroIdentificacion(dto.getNumeroIdentificacion());
-        }
+        usuarioMapper.updateEntityFromUpdateDTO(dto, usuarioExistente);
         if (dto.getNombrePais() != null) {
             usuarioExistente.setPais(resolverPais(dto.getNombrePais()));
         }
@@ -144,7 +101,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioMapper.toResponseDTO(usuarioActualizado);
     }
 
+
     @Override
+    @Transactional
     public void eliminarUsuario(Short idUsuario) {
         if (!repouser.existsById(idUsuario)) {
             throw new RuntimeException("Usuario no encontrado con ID: " + idUsuario);

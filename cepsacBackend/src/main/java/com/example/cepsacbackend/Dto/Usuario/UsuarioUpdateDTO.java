@@ -9,10 +9,9 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioUpdateRequestDTO {
+public class UsuarioUpdateDTO {
 
     private Short idUsuario;
-
     //campos opcionales para patch
     private Rol rol;
     private String nombre;
