@@ -39,7 +39,7 @@ public class UsuarioController {
             UsuarioResponseDTO nuevoUsuarioDTO = usuarioService.crearUsuario(dto);
             return new ResponseEntity<>(nuevoUsuarioDTO, HttpStatus.CREATED);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -49,7 +49,7 @@ public class UsuarioController {
             UsuarioResponseDTO usuarioActualizadoDTO = usuarioService.actualizarUsuario(dto);
             return ResponseEntity.ok(usuarioActualizadoDTO);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -59,7 +59,7 @@ public class UsuarioController {
             UsuarioResponseDTO usuarioActualizadoDTO = usuarioService.actualizarUsuarioParcialmente(dto);
             return ResponseEntity.ok(usuarioActualizadoDTO);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
