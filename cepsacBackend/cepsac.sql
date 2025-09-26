@@ -16,7 +16,7 @@ CREATE TABLE TipoIdentificacion (
 -- 3) USUARIOS
 CREATE TABLE Usuario (
     IdUsuario               SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    Rol                     ENUM('Administrador','Docente','Alumno','Otro') NOT NULL,
+    Rol                     ENUM('administrador','docente','alumno','otro') NOT NULL,
     Nombre                  VARCHAR(50) NOT NULL,
     Apellido                VARCHAR(50),
     Correo                  VARCHAR(255),
@@ -37,7 +37,7 @@ CREATE TABLE Usuario (
 -- 4) MÉTODOS DE PAGO
 CREATE TABLE MetodoPago (
     IdMetodoPago    TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    TipoMetodo      ENUM('EFECTIVO','TRANSFERENCIA','YAPE','PLIN') NOT NULL,
+    TipoMetodo      ENUM('efectivo','transferencia','yape','plin') NOT NULL,
     Descripcion     VARCHAR(100),
     Requisitos      VARCHAR(500),
     PRIMARY KEY (IdMetodoPago)
@@ -86,7 +86,7 @@ CREATE TABLE CursoDiplomado (
 -- 8) DESCUENTOS
 CREATE TABLE Descuento (
     IdDescuento     TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    TipoDescuento   ENUM('PORCENTAJE','MONTO') NOT NULL,
+    TipoDescuento   ENUM('porcentaje','monto') NOT NULL,
     Valor           DECIMAL(8,2) NOT NULL,
     Vigente         BOOLEAN DEFAULT TRUE,
     FechaInicio     DATE,
@@ -101,7 +101,7 @@ CREATE TABLE Descuento (
 CREATE TABLE DescuentoAplicacion (
     IdDescuentoAplicacion    INT UNSIGNED NOT NULL AUTO_INCREMENT,
     IdDescuento              TINYINT UNSIGNED NOT NULL,
-    TipoAplicacion           ENUM('GENERAL','CATEGORIA','CURSO') NOT NULL,
+    TipoAplicacion           ENUM('general','categoria','curso') NOT NULL,
     IdCategoria              TINYINT UNSIGNED NULL,
     IdCursoDiplomado         SMALLINT UNSIGNED NULL,
     IdUsuario                SMALLINT UNSIGNED NULL,
@@ -119,7 +119,7 @@ CREATE TABLE DescuentoAplicacion (
 -- 9) PROGRAMACIONES DE CURSO
 CREATE TABLE ProgramacionCurso (
     IdAccesoCurso       INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    Modalidad           ENUM('PRESENCIAL','VIRTUAL','24/7') DEFAULT 'VIRTUAL',
+    Modalidad           ENUM('presencial','virtual','24/7') DEFAULT 'virtual',
     DuracionCurso       DECIMAL(6,2),
     HorasSemanales      DECIMAL(6,2),
     FechaInicio         DATE,
