@@ -12,11 +12,15 @@ import com.example.cepsacbackend.Repository.PaisRepository;
 import com.example.cepsacbackend.Repository.TipoIdentificacionRepository;
 import com.example.cepsacbackend.Repository.UsuarioRepository;
 import com.example.cepsacbackend.Service.UsuarioService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import com.example.cepsacbackend.Enums.EstadoUsuario;
+import com.example.cepsacbackend.Enums.Rol;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -52,15 +56,15 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional(readOnly = true)
     public List<UsuarioResponseDTO> listarUsuarios() {
-        List<Usuario> usuarios = repouser.findAll();
+        List<Usuario> usuarios = repouser.findAllActivos();
         return usuarioMapper.toResponseDTOList(usuarios);
     }
 
     @Override
     @Transactional(readOnly = true)
     public UsuarioResponseDTO obtenerUsuario(Short idUsuario) {
-        Usuario usuario = repouser.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
+        Usuario usuario = repouser.findByIdActivo(idUsuario)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
         return usuarioMapper.toResponseDTO(usuario);
     }
 
@@ -105,9 +109,28 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public void eliminarUsuario(Short idUsuario) {
-        if (!repouser.existsById(idUsuario)) {
-            throw new RuntimeException("Usuario no encontrado con ID: " + idUsuario);
+        Usuario usuario = repouser.findByIdActivo(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
+        usuario.setEstado(EstadoUsuario.suspendido);
+        repouser.save(usuario);
+    }
+
+    //metodo para restaurar usuario suspendido
+    @Transactional
+    public UsuarioResponseDTO restaurarUsuario(Short idUsuario) {
+        Usuario usuario = repouser.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
+        if (usuario.getEstado() != EstadoUsuario.suspendido) {
+            throw new RuntimeException("El usuario no está suspendido/eliminado");
         }
-        repouser.deleteById(idUsuario);
+        usuario.setEstado(EstadoUsuario.activo);
+        Usuario usuarioRestaurado = repouser.save(usuario);
+        return usuarioMapper.toResponseDTO(usuarioRestaurado);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UsuarioResponseDTO> listarUsuariosPorRol(Rol rol) {
+        List<Usuario> usuarios = repouser.findByRolActivo(rol);
+        return usuarioMapper.toResponseDTOList(usuarios);
     }
 }
