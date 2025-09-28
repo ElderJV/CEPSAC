@@ -1,177 +1,350 @@
-# CEPSAC - API Backend
+# 🎓 CEPSAC - Sistema de Gestión Académica
 
-API para gestión de usuarios, cursos, matrículas y pagos.
+Sistema completo para la gestión de cursos, diplomados, matrículas y pagos con autenticación JWT y arquitectura REST.
 
-## Índice
-- [Convenciones](#convenciones)
-- [Autenticación](#autenticación)
-- [Endpoints](#endpoints)
-  - [Usuarios](#1-usuarios)
-  - [Países](#2-países)
-  - [Tipos de Identificación](#3-tipos-de-identificación)
-  - [Categorías](#4-categorías)
-  - [Cursos / Diplomados](#5-cursos--diplomados)
-  - [Programaciones de Curso](#6-programaciones-de-curso)
-  - [Matrículas](#7-matrículas)
-  - [Pagos](#8-pagos)
-  - [Métodos de Pago](#9-métodos-de-pago)
-  - [Descuentos](#10-descuentos)
-  - [Sponsors](#11-sponsors)
-  - [Extras Frontend / Reportes](#12-extras-frontend--reportes)
+## 📋 Tabla de Contenidos
 
-## Convenciones
-- **Base URL**: `http://localhost:PUERTO/api`
-- **Formato**: JSON (`Content-Type: application/json`)
-- **Respuestas**: usar códigos HTTP estándar.
-- Todos los `POST` requieren un `body` JSON con parámetros.
+- [Características](#-características)
+- [Tecnologías](#-tecnologías)
+- [Arquitectura](#-arquitectura)
+- [Instalación](#-instalación)
+- [Configuración](#-configuración)
+- [Autenticación](#-autenticación)
+- [API Endpoints](#-api-endpoints)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Buenas Prácticas](#-buenas-prácticas)
+- [Contribución](#-contribución)
 
-## Autenticación
-- `POST /api/auth/login`
-  Body:
-  ```json
-  { "correo": "user@dominio.com", "password": "********" }
-  ```
+## ✨ Características
 
-## Endpoints
+- 🔐 **Autenticación JWT** con roles (Administrador, Alumno, Docente)
+- 👥 **Gestión de Usuarios** con soft delete
+- 🌍 **Gestión de Países** y tipos de identificación
+- 📚 **Gestión de Cursos** y diplomados
+- 💰 **Sistema de Pagos** y matrículas
+- 🛡️ **Validaciones robustas** en DTOs y entidades
+- 📊 **Soft Delete** para mejor rendimiento y auditoría
+- 🔄 **Mapeo automático** con MapStruct
+- 📝 **Manejo de excepciones** centralizado
+- 🎯 **DTOs separados** por propósito (Create, Update, Patch, Response)
 
-### 1. Usuarios
-- `GET /api/usuarios/listar` — Listar todos los usuarios
-- `POST /api/usuarios/obtener` — Detalle de un usuario
-  Body: `{ "idUsuario": 5 }`
-- `POST /api/usuarios/crear` — Crear usuario
-  Body: `{ "nombre": "Juan", "apellido": "Pérez", "correo": "juan@email.com", "password": "123456", "rol": "Alumno", "numeroCelular": "987654321", "numeroIdentificacion": "12345678" }`
-- `POST /api/usuarios/actualizar` — Actualizar usuario
-  Body: `{ "idUsuario": 5, "nombre": "Juan Carlos", "apellido": "Pérez García" }`
-- `POST /api/usuarios/eliminar` — Eliminar usuario
-  Body: `{ "idUsuario": 5 }`
-- `POST /api/usuarios/matriculas` — Matrículas de un usuario
-  Body: `{ "idUsuario": 7 }`
-- `POST /api/usuarios/pagos` — Pagos de un usuario
-  Body: `{ "idUsuario": 7 }`
+## 🛠️ Tecnologías
 
-### 2. Países
-- `GET /api/paises/listar`
-- `POST /api/paises/obtener`
-  Body: `{ "idPais": 1 }`
-- `POST /api/paises/crear`
-  Body: `{ "nombre": "Perú", "codigo": "+51" }`
-- `POST /api/paises/actualizar`
-  Body: `{ "idPais": 1, "nombre": "República del Perú", "codigo": "+51" }`
-- `POST /api/paises/eliminar`
-  Body: `{ "idPais": 1 }`
+### Backend
+- **Java 21** - Lenguaje de programación
+- **Spring Boot 3.5.6** - Framework principal
+- **Spring Security** - Autenticación y autorización
+- **Spring Data JPA** - Persistencia de datos
+- **MySQL** - Base de datos
+- **JWT (jjwt)** - Tokens de autenticación
+- **MapStruct** - Mapeo de objetos
+- **Lombok** - Reducción de código boilerplate
+- **Maven** - Gestión de dependencias
 
-### 3. Tipos de Identificación
-- `GET /api/tipos-identificacion/listar`
-- `POST /api/tipos-identificacion/obtener`
-  Body: `{ "idTipoIdentificacion": 1 }`
-- `POST /api/tipos-identificacion/crear`
-  Body: `{ "nombre": "DNI" }`
-- `POST /api/tipos-identificacion/actualizar`
-  Body: `{ "idTipoIdentificacion": 1, "nombre": "Documento Nacional de Identidad" }`
-- `POST /api/tipos-identificacion/eliminar`
-  Body: `{ "idTipoIdentificacion": 1 }`
+### Frontend
+- **Angular 20** - Framework frontend
+- **TypeScript** - Lenguaje de programación
+- **RxJS** - Programación reactiva
 
-### 4. Categorías
-- `GET /api/categorias/listar`
-- `POST /api/categorias/obtener`
-  Body: `{ "idCategoria": 1 }`
-- `POST /api/categorias/crear`
-  Body: `{ "nombre": "Programación", "descripcion": "Cursos de desarrollo de software" }`
-- `POST /api/categorias/actualizar`
-  Body: `{ "idCategoria": 1, "nombre": "Desarrollo de Software", "descripcion": "Cursos de programación y desarrollo" }`
-- `POST /api/categorias/eliminar`
-  Body: `{ "idCategoria": 1 }`
+## 🏗️ Arquitectura
 
-### 5. Cursos / Diplomados
-- `GET /api/cursos/listar`
-- `POST /api/cursos/obtener`
-  Body: `{ "idCursoDiplomado": 1 }`
-- `POST /api/cursos/crear`
-  Body: `{ "titulo": "Java para Principiantes", "descripcion": "Curso introductorio a Java", "tipo": false, "otorgaCertificado": true, "idCategoria": 1 }`
-- `POST /api/cursos/actualizar`
-  Body: `{ "idCursoDiplomado": 1, "titulo": "Java desde Cero", "descripcion": "Curso completo de Java" }`
-- `POST /api/cursos/eliminar`
-  Body: `{ "idCursoDiplomado": 1 }`
-- `POST /api/cursos/programaciones` — Listar programaciones de un curso
-  Body: `{ "idCursoDiplomado": 1 }`
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Frontend      │    │   Backend       │    │   Database      │
+│   (Angular)     │◄──►│   (Spring Boot) │◄──►│   (MySQL)       │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                              │
+                              ▼
+                       ┌─────────────────┐
+                       │   JWT Service   │
+                       │   (Autenticación)│
+                       └─────────────────┘
+```
 
-### 6. Programaciones de Curso
-- `GET /api/programaciones/listar`
-- `POST /api/programaciones/obtener`
-  Body: `{ "idAccesoCurso": 1 }`
-- `POST /api/programaciones/crear`
-  Body: `{ "modalidad": "VIRTUAL", "duracionCurso": 40.0, "fechaInicio": "2025-02-01", "fechaFin": "2025-03-15", "idCursoDiplomado": 1 }`
-- `POST /api/programaciones/actualizar`
-  Body: `{ "idAccesoCurso": 1, "modalidad": "PRESENCIAL", "duracionCurso": 35.0 }`
-- `POST /api/programaciones/eliminar`
-  Body: `{ "idAccesoCurso": 1 }`
-- `POST /api/programaciones/matriculas` — Matrículas de una programación
-  Body: `{ "idAccesoCurso": 1 }`
+### Patrón de Arquitectura
+- **Controller** → **Service** → **Repository** → **Entity**
+- **DTOs** para transferencia de datos
+- **Mappers** para conversión automática
+- **Filtros JWT** para autenticación automática
 
-### 7. Matrículas
-- `GET /api/matriculas/listar`
-- `POST /api/matriculas/obtener`
-  Body: `{ "idMatricula": 1 }`
-- `POST /api/matriculas/crear`
-  Body: `{ "idProgramacionCurso": 1, "idAlumno": 5, "monto": 500.00 }`
-- `POST /api/matriculas/actualizar`
-  Body: `{ "idMatricula": 1, "estado": "pagado", "monto": 450.00 }`
-- `POST /api/matriculas/eliminar`
-  Body: `{ "idMatricula": 1 }`
-- `POST /api/matriculas/cancelar`
-  Body: `{ "idMatricula": 1 }`
-- `POST /api/matriculas/pagos` — Pagos de una matrícula
-  Body: `{ "idMatricula": 1 }`
+## 🚀 Instalación
 
-### 8. Pagos
-- `GET /api/pagos/listar`
-- `POST /api/pagos/obtener`
-  Body: `{ "idPago": 1 }`
-- `POST /api/pagos/crear`
-  Body: `{ "idMatricula": 1, "idMetodoPago": 1, "monto": 250.00, "numeroCuota": 1 }`
-- `POST /api/pagos/actualizar`
-  Body: `{ "idPago": 1, "monto": 200.00 }`
-- `POST /api/pagos/eliminar`
-  Body: `{ "idPago": 1 }`
+### Prerrequisitos
+- Java 21+
+- Maven 3.6+
+- MySQL 8.0+
+- Node.js 18+ (para frontend)
 
-### 9. Métodos de Pago
-- `GET /api/metodos-pago/listar`
-- `POST /api/metodos-pago/obtener`
-  Body: `{ "idMetodoPago": 1 }`
-- `POST /api/metodos-pago/crear`
-  Body: `{ "tipoMetodo": "TRANSFERENCIA", "descripcion": "Transferencia bancaria", "requisitos": "Adjuntar comprobante" }`
-- `POST /api/metodos-pago/actualizar`
-  Body: `{ "idMetodoPago": 1, "descripcion": "Transferencia bancaria nacional" }`
-- `POST /api/metodos-pago/eliminar`
-  Body: `{ "idMetodoPago": 1 }`
+### Backend
+```bash
+# Clonar el repositorio
+git clone <repository-url>
+cd CEPSAC/cepsacBackend
 
-### 10. Descuentos
-- `GET /api/descuentos/listar`
-- `POST /api/descuentos/obtener`
-  Body: `{ "idDescuento": 1 }`
-- `POST /api/descuentos/crear`
-  Body: `{ "tipoDescuento": "PORCENTAJE", "valor": 15.00, "vigente": true, "fechaInicio": "2025-01-01", "fechaFin": "2025-12-31" }`
-- `POST /api/descuentos/actualizar`
-  Body: `{ "idDescuento": 1, "valor": 20.00, "vigente": false }`
-- `POST /api/descuentos/eliminar`
-  Body: `{ "idDescuento": 1 }`
+# Instalar dependencias
+mvn clean install
 
-### 11. Sponsors
-- `GET /api/sponsors/listar`
-- `POST /api/sponsors/obtener`
-  Body: `{ "idSponsor": 1 }`
-- `POST /api/sponsors/crear`
-  Body: `{ "nombre": "Empresa ABC", "urlSponsor": "https://empresa-abc.com" }`
-- `POST /api/sponsors/actualizar`
-  Body: `{ "idSponsor": 1, "nombre": "Empresa ABC S.A.C.", "urlSponsor": "https://www.empresa-abc.com" }`
-- `POST /api/sponsors/eliminar`
-  Body: `{ "idSponsor": 1 }`
+# Ejecutar la aplicación
+mvn spring-boot:run
+```
 
-### 12. Extras Frontend / Reportes
-- `GET /api/dashboard/estadisticas` — Métricas generales
-- `POST /api/reportes/pagos`
-  Body: `{ "desde": "2025-01-01", "hasta": "2025-01-31" }`
-- `POST /api/reportes/matriculas`
-  Body: `{ "cursoId": 2 }`
+### Frontend
+```bash
+cd CEPSAC/frontend
 
----
+# Instalar dependencias
+npm install
+
+# Ejecutar en modo desarrollo
+npm start
+```
+
+## ⚙️ Configuración
+
+### Base de Datos
+```properties
+# application.properties
+spring.datasource.url=jdbc:mysql://localhost:3306/cepsac
+spring.datasource.username=root
+spring.datasource.password=tu_password
+spring.jpa.hibernate.ddl-auto=update
+```
+
+### JWT
+```properties
+# Configuración JWT
+application.security.jwt.secret-key=${JWT_SECRET_KEY:tu-clave-secreta-muy-larga}
+application.security.jwt.expiration=86400000
+```
+
+## 🔐 Autenticación
+
+### Login
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "correo": "usuario@ejemplo.com",
+  "password": "MiPassword123!"
+}
+```
+
+### Respuesta
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+### Uso del Token
+```http
+GET /api/usuarios/listar
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+## 📡 API Endpoints
+
+### 🔐 Autenticación
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | `/api/auth/login` | Iniciar sesión |
+
+### 👥 Usuarios
+| Método | Endpoint | Descripción | Autenticación |
+|--------|----------|-------------|---------------|
+| GET | `/api/usuarios/listar` | Listar usuarios activos | ✅ |
+| GET | `/api/usuarios/listar/{rol}` | Listar por rol | ✅ |
+| GET | `/api/usuarios/obtener/{id}` | Obtener usuario | ✅ |
+| POST | `/api/usuarios/crear` | Crear usuario | ✅ |
+| PUT | `/api/usuarios/actualizar` | Actualizar usuario completo | ✅ |
+| PATCH | `/api/usuarios/actualizar-parcial` | Actualizar usuario parcial | ✅ |
+| DELETE | `/api/usuarios/eliminar/{id}` | Eliminar usuario (soft delete) | ✅ |
+| POST | `/api/usuarios/restaurar/{id}` | Restaurar usuario suspendido | ✅ |
+
+### 🌍 Países
+| Método | Endpoint | Descripción | Autenticación |
+|--------|----------|-------------|---------------|
+| GET | `/api/paises/listar` | Listar países | ✅ |
+| GET | `/api/paises/obtener/{id}` | Obtener país | ✅ |
+| POST | `/api/paises/crear` | Crear país | ✅ |
+| PUT | `/api/paises/actualizar` | Actualizar país | ✅ |
+| DELETE | `/api/paises/eliminar/{id}` | Eliminar país | ✅ |
+
+### 🆔 Tipos de Identificación
+| Método | Endpoint | Descripción | Autenticación |
+|--------|----------|-------------|---------------|
+| GET | `/api/tipos-identificacion/listar` | Listar tipos | ✅ |
+| GET | `/api/tipos-identificacion/obtener/{id}` | Obtener tipo | ✅ |
+| POST | `/api/tipos-identificacion/crear` | Crear tipo | ✅ |
+| PUT | `/api/tipos-identificacion/actualizar` | Actualizar tipo | ✅ |
+| DELETE | `/api/tipos-identificacion/eliminar/{id}` | Eliminar tipo | ✅ |
+
+## 📁 Estructura del Proyecto
+
+```
+cepsacBackend/
+├── src/main/java/com/example/cepsacbackend/
+│   ├── Config/                          # Configuraciones
+│   │   ├── ApplicationConfig.java       # Configuración de seguridad
+│   │   ├── GlobalExceptionHandler.java  # Manejo de excepciones
+│   │   └── Security/                    # Configuración JWT
+│   │       ├── CustomUserDetails.java   # Detalles de usuario
+│   │       ├── JwtFilter.java          # Filtro JWT
+│   │       ├── JwtService.java         # Servicio JWT
+│   │       └── SecurityConfig.java     # Configuración de seguridad
+│   ├── Controller/                      # Controladores REST
+│   │   ├── AuthController.java         # Autenticación
+│   │   ├── UsuarioController.java      # Gestión de usuarios
+│   │   ├── PaisController.java         # Gestión de países
+│   │   └── TipoIdentificacionController.java
+│   ├── Dto/                            # Data Transfer Objects
+│   │   ├── Login/                      # DTOs de autenticación
+│   │   │   ├── LoginRequestDTO.java    # Login request
+│   │   │   └── AuthResponseDTO.java    # Login response
+│   │   └── Usuario/                    # DTOs de usuario
+│   │       ├── UsuarioCreateDTO.java   # Crear usuario
+│   │       ├── UsuarioUpdateDTO.java   # Actualizar usuario
+│   │       ├── UsuarioPatchDTO.java    # Actualización parcial
+│   │       └── UsuarioResponseDTO.java # Respuesta de usuario
+│   ├── Entity/                         # Entidades JPA
+│   │   ├── Usuario.java               # Entidad usuario
+│   │   ├── Pais.java                  # Entidad país
+│   │   └── TipoIdentificacion.java    # Entidad tipo identificación
+│   ├── Enums/                         # Enumeraciones
+│   │   ├── EstadoUsuario.java         # Estados de usuario
+│   │   └── Rol.java                   # Roles de usuario
+│   ├── Mapper/                        # Mapeadores MapStruct
+│   │   └── UsuarioMapper.java         # Mapeo de usuarios
+│   ├── Repository/                    # Repositorios JPA
+│   │   ├── UsuarioRepository.java     # Repositorio usuarios
+│   │   ├── PaisRepository.java        # Repositorio países
+│   │   └── TipoIdentificacionRepository.java
+│   └── Service/                       # Servicios de negocio
+│       ├── UsuarioService.java        # Interfaz servicio usuarios
+│       └── Impl/
+│           └── UsuarioServiceImpl.java # Implementación servicio
+└── src/main/resources/
+    └── application.properties         # Configuración de la aplicación
+```
+
+## 🎯 Buenas Prácticas Implementadas
+
+### 🔒 Seguridad
+- ✅ Autenticación JWT con expiración
+- ✅ Validación de contraseñas robustas
+- ✅ Soft delete para mantener auditoría
+- ✅ Validaciones en DTOs y entidades
+- ✅ Manejo centralizado de excepciones
+
+### 🚀 Rendimiento
+- ✅ Soft delete para consultas más rápidas
+- ✅ Mapeo automático con MapStruct
+- ✅ Consultas optimizadas con JPA
+- ✅ Lazy loading en relaciones
+
+### 🧹 Código Limpio
+- ✅ Separación de DTOs por propósito
+- ✅ Arquitectura en capas
+- ✅ Inyección de dependencias
+- ✅ Nombres consistentes entre entidades y DTOs
+- ✅ Documentación clara
+
+### 📊 Validaciones
+- ✅ Validaciones de formato (email, teléfono)
+- ✅ Validaciones de longitud
+- ✅ Validaciones de negocio
+- ✅ Mensajes de error descriptivos
+
+## 🎓 Roles y Permisos
+
+| Rol | Descripción | Permisos |
+|-----|-------------|----------|
+| **administrador** | Administrador del sistema | Acceso completo a todos los endpoints |
+| **docente** | Profesor/instructor | Gestión de cursos y estudiantes |
+| **alumno** | Estudiante | Acceso a sus propios datos y matrículas |
+| **Otro** | Rol personalizado | Permisos específicos según configuración |
+
+## 🗄️ Estados de Usuario
+
+| Estado | Descripción | ¿Visible en Frontend? | ¿Puede hacer Login? |
+|--------|-------------|----------------------|-------------------|
+| **activo** | Usuario normal | ✅ Sí | ✅ Sí |
+| **inactivo** | Usuario deshabilitado | ✅ Sí | ❌ No |
+| **suspendido** | Usuario eliminado (soft delete) | ❌ No | ❌ No |
+
+## 📝 Ejemplos de Uso
+
+### Crear Usuario
+```json
+POST /api/usuarios/crear
+{
+  "rol": "alumno",
+  "nombre": "Alejandro",
+  "apellido": "Castillo J",
+  "correo": "ale@gmail.com",
+  "password": "1234!",
+  "numeroCelular": "987654321",
+  "numeroIdentificacion": "12345678",
+  "nombrePais": "Perú",
+  "idTipoIdentificacion": 1
+}
+```
+
+### Actualizar Usuario (PATCH)
+```json
+PATCH /api/usuarios/actualizar-parcial
+{
+  "idUsuario": 1,
+  "nombre": "Juan Carlos",
+  "numeroCelular": "+51987654322"
+}
+```
+
+### Listar Usuarios por Rol
+```http
+GET /api/usuarios/listar/alumno
+Authorization: Bearer tu-jwt-token
+```
+
+### Soft Delete (Suspender Usuario)
+```http
+DELETE /api/usuarios/eliminar/1
+Authorization: Bearer tu-jwt-token
+```
+
+### Restaurar Usuario
+```http
+POST /api/usuarios/restaurar/1
+Authorization: Bearer tu-jwt-token
+```
+
+## 🔧 DTOs Implementados
+
+### UsuarioCreateDTO
+- Para crear nuevos usuarios
+- Todos los campos obligatorios
+- Validaciones completas
+
+### UsuarioUpdateDTO
+- Para actualización completa (PUT)
+- Incluye ID del usuario
+- Todos los campos obligatorios
+
+### UsuarioPatchDTO
+- Para actualización parcial (PATCH)
+- Campos opcionales
+- Solo actualiza campos enviados
+
+### UsuarioResponseDTO
+- Para respuestas de la API
+- Incluye datos relacionados (país, tipo identificación)
+- Sin información sensible
+
+## 🤝 Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
