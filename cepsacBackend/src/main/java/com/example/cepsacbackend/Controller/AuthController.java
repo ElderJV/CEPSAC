@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
+@Validated
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -24,17 +27,16 @@ public class AuthController {
     private final UserDetailsService servicioDetallesUsuario;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> iniciarSesion(@RequestBody LoginRequestDTO peticion) {
-
-        // Autenticar credenciales
+    public ResponseEntity<AuthResponseDTO> iniciarSesion(@Valid @RequestBody LoginRequestDTO peticion) {
+        // autenticar credenciales
         gestorAutenticacion.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        peticion.getEmail(),
-                        peticion.getContrasena()
+                        peticion.getCorreo(),
+                        peticion.getPassword()
                 )
         );
         // traemos userdetails
-        final UserDetails detallesUsuario = servicioDetallesUsuario.loadUserByUsername(peticion.getEmail());
+        final UserDetails detallesUsuario = servicioDetallesUsuario.loadUserByUsername(peticion.getCorreo()); // Cambiado de getEmail() a getCorreo()
         // generamos token
         final String tokenJwt = servicioJwt.generarToken(detallesUsuario);
         // devolvemos token

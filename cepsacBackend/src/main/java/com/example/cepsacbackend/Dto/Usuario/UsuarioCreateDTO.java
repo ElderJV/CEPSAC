@@ -17,10 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioUpdateDTO {
-
-    @NotNull(message = "El ID del usuario es obligatorio para actualización")
-    private Short idUsuario;
+public class UsuarioCreateDTO {
 
     @NotNull(message = "El rol es obligatorio")
     @Enumerated(EnumType.STRING)
@@ -47,7 +44,7 @@ public class UsuarioUpdateDTO {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private EstadoUsuario estado;
+    private EstadoUsuario estado = EstadoUsuario.activo;
 
     @Pattern(regexp = "^[+]?[0-9\\s\\-()]{7,15}$", message = "Formato de número celular inválido")
     @Size(max = 15, message = "El número celular no puede exceder 15 caracteres")
@@ -57,7 +54,7 @@ public class UsuarioUpdateDTO {
     @Pattern(regexp = "^[0-9]+$", message = "El número de identificación solo puede contener dígitos")
     private String numeroIdentificacion;
 
-    @Size(max = 100, message = "El nombre del país no puede exceder 100 caracteres")
+    @Size(max = 50, message = "El nombre del país no puede exceder 50 caracteres")
     private String nombrePais;
 
     @Positive(message = "El ID del tipo de identificación debe ser un número positivo")

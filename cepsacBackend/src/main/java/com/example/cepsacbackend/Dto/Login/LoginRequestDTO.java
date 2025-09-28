@@ -1,15 +1,20 @@
 package com.example.cepsacbackend.Dto.Login;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginRequestDTO {
-    private String email;
-    private String contrasena;
+
+    @NotBlank(message = "El correo es obligatorio")
+    @Email(message = "Formato de correo electrónico inválido")
+    private String correo;
+
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 1, message = "La contraseña no puede estar vacía")
+    private String password;
 }

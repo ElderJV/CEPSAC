@@ -1,17 +1,21 @@
 package com.example.cepsacbackend.Controller;
 
-import com.example.cepsacbackend.Dto.Usuario.UsuarioRequestDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioCreateDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioResponseDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioPatchDTO;
 import com.example.cepsacbackend.Service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
@@ -34,7 +38,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<UsuarioResponseDTO> crearUsuario(@RequestBody UsuarioRequestDTO dto) {
+    public ResponseEntity<UsuarioResponseDTO> crearUsuario(@Valid @RequestBody UsuarioCreateDTO dto) {
         try {
             UsuarioResponseDTO nuevoUsuarioDTO = usuarioService.crearUsuario(dto);
             return new ResponseEntity<>(nuevoUsuarioDTO, HttpStatus.CREATED);
@@ -44,7 +48,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/actualizar")
-    public ResponseEntity<UsuarioResponseDTO> actualizarUsuario(@RequestBody UsuarioRequestDTO dto) {
+    public ResponseEntity<UsuarioResponseDTO> actualizarUsuario(@Valid @RequestBody UsuarioUpdateDTO dto) {
         try {
             UsuarioResponseDTO usuarioActualizadoDTO = usuarioService.actualizarUsuario(dto);
             return ResponseEntity.ok(usuarioActualizadoDTO);
@@ -54,7 +58,7 @@ public class UsuarioController {
     }
 
     @PatchMapping("/actualizar-parcial")
-    public ResponseEntity<UsuarioResponseDTO> actualizarUsuarioParcialmente(@RequestBody UsuarioUpdateDTO dto) {
+    public ResponseEntity<UsuarioResponseDTO> actualizarUsuarioParcialmente(@Valid @RequestBody UsuarioPatchDTO dto) {
         try {
             UsuarioResponseDTO usuarioActualizadoDTO = usuarioService.actualizarUsuarioParcialmente(dto);
             return ResponseEntity.ok(usuarioActualizadoDTO);
