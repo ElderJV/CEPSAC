@@ -106,14 +106,14 @@ npm start
 # application.properties
 spring.datasource.url=jdbc:mysql://localhost:3306/cepsac
 spring.datasource.username=root
-spring.datasource.password=tu_password
+spring.datasource.password=
 spring.jpa.hibernate.ddl-auto=update
 ```
 
 ### JWT
 ```properties
 # Configuración JWT
-application.security.jwt.secret-key=${JWT_SECRET_KEY:tu-clave-secreta-muy-larga}
+application.security.jwt.secret-key=${JWT_SECRET_KEY:MARIOCHIPIRECONTRASAUYSUNOVIACRISDIEGOGEISAPOSETENTATETRADOBLETRIPLEIJUEPUTAxd}
 application.security.jwt.expiration=86400000
 ```
 
