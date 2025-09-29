@@ -21,12 +21,12 @@ public interface UsuarioMapper {
     @Mapping(target = "tipoIdentificacion", ignore = true)
     Usuario toEntity(UsuarioCreateDTO dto);
 
-    // Para actualizacion con PUT
+    // para actualizar con PUT
     @Mapping(target = "pais", ignore = true)
     @Mapping(target = "tipoIdentificacion", ignore = true)
     void updateEntityFromUpdateDTO(UsuarioUpdateDTO dto, @MappingTarget Usuario entity);
 
-    // Para actualización con PATCH
+    // para actualizar con PATCH
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "pais", ignore = true)
     @Mapping(target = "tipoIdentificacion", ignore = true)
