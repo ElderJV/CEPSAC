@@ -92,7 +92,7 @@ CREATE TABLE Descuento (
     Vigente         BOOLEAN DEFAULT TRUE,
     FechaInicio     DATE,
     FechaFin        DATE,
-    IdUsuario       SMALLINT UNSIGNED, -- ⬅️ Auditoría: Usuario que creó/modificó el descuento
+    IdUsuario       SMALLINT UNSIGNED, -- usuario creador de descuento
     PRIMARY KEY (IdDescuento),
     CONSTRAINT fk_desc_usuario FOREIGN KEY (IdUsuario)
         REFERENCES Usuario(IdUsuario) ON DELETE SET NULL ON UPDATE CASCADE
@@ -105,7 +105,7 @@ CREATE TABLE DescuentoAplicacion (
     TipoAplicacion             ENUM('general','categoria','curso') NOT NULL,
     IdCategoria                TINYINT UNSIGNED NULL,     -- NULL para 'general' o 'curso'
     IdCursoDiplomado           SMALLINT UNSIGNED NULL,    -- NULL para 'general' o 'categoria'
-    IdUsuario                  SMALLINT UNSIGNED NULL,    -- ⬅️ Auditoría: Usuario que registra la regla de aplicación
+    IdUsuario                  SMALLINT UNSIGNED NULL,    -- usuario que registra la regla de aplicacion
     PRIMARY KEY (IdDescuentoAplicacion),
     CONSTRAINT fk_descap_desc FOREIGN KEY (IdDescuento)
         REFERENCES Descuento(IdDescuento) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -143,7 +143,7 @@ CREATE TABLE Matricula (
     FechaMatricula            DATETIME DEFAULT CURRENT_TIMESTAMP,
     Estado                    ENUM('pendiente','pagado','cancelado','en proceso') DEFAULT 'pendiente',
     MontoBase                 DECIMAL(10,2),    -- Monto inicial del curso (antes del descuento)
-    MontoDescontado           DECIMAL(10,2),    -- La cantidad total de dinero descontada ($0.00 si IdDescuento es NULL)
+    MontoDescontado           DECIMAL(10,2),    -- La cantidad total de dinero descontada (S/.0.00 si IdDescuento es NULL)
     Monto                     DECIMAL(10,2),    -- Monto neto final a pagar (MontoBase - MontoDescontado)
     IdDescuento               TINYINT UNSIGNED, -- Opcional (NULL si no hay descuento)
     PRIMARY KEY (IdMatricula),
@@ -165,7 +165,7 @@ CREATE TABLE Pago (
     Monto           DECIMAL(10,2) NOT NULL,
     NumeroCuota     TINYINT UNSIGNED,
     FechaPago       DATETIME DEFAULT CURRENT_TIMESTAMP,
-    IdUsuario       SMALLINT UNSIGNED, -- Usuario que registró el pago
+    IdUsuario       SMALLINT UNSIGNED, -- usuario que registro el pago
     PRIMARY KEY (IdPago),
     CONSTRAINT fk_pago_matricula FOREIGN KEY (IdMatricula)
         REFERENCES Matricula(IdMatricula) ON DELETE CASCADE ON UPDATE CASCADE,
