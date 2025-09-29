@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.util.List;
 
 @Entity
 @Data
@@ -26,6 +25,4 @@ public class Pais {
     @Column(name = "CodigoTelefono", length = 5)
     private String codigotelefono;
 
-    @OneToMany(mappedBy = "pais", fetch = FetchType.LAZY)
-    private List<Usuario> usuarios;
 }

@@ -12,6 +12,9 @@ import com.example.cepsacbackend.Repository.PaisRepository;
 import com.example.cepsacbackend.Repository.TipoIdentificacionRepository;
 import com.example.cepsacbackend.Repository.UsuarioRepository;
 import com.example.cepsacbackend.Service.UsuarioService;
+import com.example.cepsacbackend.Enums.EstadoUsuario;
+import com.example.cepsacbackend.Enums.Rol;
+import org.springframework.cache.annotation.Cacheable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import com.example.cepsacbackend.Enums.EstadoUsuario;
-import com.example.cepsacbackend.Enums.Rol;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -53,9 +54,12 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Tipo de Identificación no encontrado id=" + idTipo));
     }
 
+    //una sola consulta con join fetch
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("usuarios")
     public List<UsuarioResponseDTO> listarUsuarios() {
+        System.out.println("🔍 EJECUTANDO CONSULTA A BD - NO DESDE CACHÉ");
         List<Usuario> usuarios = repouser.findAllActivos();
         return usuarioMapper.toResponseDTOList(usuarios);
     }
@@ -117,6 +121,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     //metodo para restaurar usuario suspendido
     @Transactional
+    @Override
     public UsuarioResponseDTO restaurarUsuario(Short idUsuario) {
         Usuario usuario = repouser.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
@@ -129,6 +134,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<UsuarioResponseDTO> listarUsuariosPorRol(Rol rol) {
         List<Usuario> usuarios = repouser.findByRolActivo(rol);
         return usuarioMapper.toResponseDTOList(usuarios);

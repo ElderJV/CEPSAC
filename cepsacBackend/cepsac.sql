@@ -3,6 +3,7 @@ CREATE TABLE Pais (
     IdPais          TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
     Nombre          VARCHAR(50) NOT NULL,
     Codigo          VARCHAR(5),
+    CodigoTelefono  VARCHAR(5),
     PRIMARY KEY (IdPais)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

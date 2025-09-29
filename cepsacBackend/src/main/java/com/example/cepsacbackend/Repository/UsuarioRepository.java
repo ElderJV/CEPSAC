@@ -15,16 +15,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Short> {
     Optional<Usuario> findByCorreo(String correo);
     List<Usuario> findByEstado(EstadoUsuario estado);
 
-    @Query("SELECT u FROM Usuario u WHERE u.estado != 'suspendido'")
+    @Query("SELECT u FROM Usuario u LEFT JOIN FETCH u.pais LEFT JOIN FETCH u.tipoIdentificacion WHERE u.estado != 'suspendido'")
     List<Usuario> findAllActivos();
 
-    @Query("SELECT u FROM Usuario u WHERE u.estado != 'suspendido' AND u.idUsuario = :id")
+    @Query("SELECT u FROM Usuario u LEFT JOIN FETCH u.pais LEFT JOIN FETCH u.tipoIdentificacion WHERE u.estado != 'suspendido' AND u.idUsuario = :id")
     Optional<Usuario> findByIdActivo(@Param("id") Short id);
 
-    @Query("SELECT u FROM Usuario u WHERE u.estado != 'suspendido' AND u.correo = :correo")
+    @Query("SELECT u FROM Usuario u LEFT JOIN FETCH u.pais LEFT JOIN FETCH u.tipoIdentificacion WHERE u.estado != 'suspendido' AND u.correo = :correo")
     Optional<Usuario> findByCorreoActivo(@Param("correo") String correo);
 
-    // Métodos por rol (solo usuarios activos)
-    @Query("SELECT u FROM Usuario u WHERE u.estado != 'suspendido' AND u.rol = :rol")
+    @Query("SELECT u FROM Usuario u LEFT JOIN FETCH u.pais LEFT JOIN FETCH u.tipoIdentificacion WHERE u.estado != 'suspendido' AND u.rol = :rol")
     List<Usuario> findByRolActivo(@Param("rol") Rol rol);
 }
