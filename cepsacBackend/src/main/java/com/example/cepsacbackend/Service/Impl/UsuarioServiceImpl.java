@@ -14,20 +14,20 @@ import com.example.cepsacbackend.Repository.PaisRepository;
 import com.example.cepsacbackend.Repository.TipoIdentificacionRepository;
 import com.example.cepsacbackend.Repository.UsuarioRepository;
 import com.example.cepsacbackend.Service.UsuarioService;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
-    private UsuarioRepository repouser;
+    private  UsuarioRepository repouser;
 
     @Autowired
     private PaisRepository repopais;
@@ -37,6 +37,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioMapper usuarioMapper;
+
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
 
     private Pais resolverPais(String nombrePais) {
         if (nombrePais == null || nombrePais.trim().isEmpty()) {
@@ -77,6 +80,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuario = usuarioMapper.toEntity(dto);
         usuario.setPais(resolverPais(dto.getNombrePais()));
         usuario.setTipoIdentificacion(resolverTipoIdentificacion(dto.getIdTipoIdentificacion()));
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         Usuario nuevoUsuario = repouser.save(usuario);
         return usuarioMapper.toResponseDTO(nuevoUsuario);
     }
@@ -89,6 +93,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioMapper.updateEntityFromUpdateDTO(dto, usuarioExistente);
         usuarioExistente.setPais(resolverPais(dto.getNombrePais()));
         usuarioExistente.setTipoIdentificacion(resolverTipoIdentificacion(dto.getIdTipoIdentificacion()));
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            usuarioExistente.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
         Usuario usuarioActualizado = repouser.save(usuarioExistente);
         return usuarioMapper.toResponseDTO(usuarioActualizado);
     }
@@ -104,6 +111,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
         if (dto.getIdTipoIdentificacion() != null) {
             usuarioExistente.setTipoIdentificacion(resolverTipoIdentificacion(dto.getIdTipoIdentificacion()));
+        }
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            usuarioExistente.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         Usuario usuarioActualizado = repouser.save(usuarioExistente);
         return usuarioMapper.toResponseDTO(usuarioActualizado);
