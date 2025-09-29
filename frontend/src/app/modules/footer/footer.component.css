@@ -1,0 +1,83 @@
+/* Color de fondo oscuro y texto claro para todo el footer */
+.site-footer {
+  background-color: #1E2837;
+  color: #bdc3c7;
+  padding: 40px 0;
+  font-size: 0.9rem;
+}
+
+/* Estilo para los títulos de las secciones */
+.footer-title {
+  color: #ffffff;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-size: 1rem;
+}
+
+/* Estilo para el nombre de la empresa */
+.company-name {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.ruc-text {
+  font-size: 0.9rem;
+  color: #bdc3c7;
+}
+
+/* Estilo para el logo */
+.footer-logo {
+  width: 130px;
+  /* Ajusta el tamaño según tu logo */
+  height: auto;
+  /* Fondo blanco como en la imagen */
+  border-radius: 8px;
+  /* Bordes redondeados */
+  padding: 10px;
+}
+
+/* Estilo para los enlaces del footer */
+.footer-link {
+  color: #bdc3c7;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+  /* El enlace se vuelve blanco al pasar el mouse */
+  text-decoration: none;
+}
+
+/* Iconos de contacto */
+.contact-icon {
+  font-size: 1.2rem;
+  /* Tamaño del ícono */
+  margin-right: 15px;
+  /* Espacio entre el ícono y el texto */
+  width: 25px;
+  /* Ancho fijo para alinear el texto */
+  text-align: center;
+}
+
+/* Ajustes para la lista de contactos para que no tenga tanto espacio inferior */
+.contact-info li:last-child a {
+  margin-bottom: 0;
+}
+
+/* Media query para alinear el texto al centro en pantallas pequeñas */
+@media (max-width: 991.98px) {
+  .site-footer {
+    text-align: center;
+  }
+
+  .footer-link {
+    justify-content: center;
+    /* Centra los links con íconos */
+  }
+}

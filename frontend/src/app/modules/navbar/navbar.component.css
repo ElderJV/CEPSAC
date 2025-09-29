@@ -1,0 +1,144 @@
+/* --- Logo --- */
+.navbar-brand {
+  font-size: 1.5rem;
+  color: #2c3e50 !important;
+}
+
+.search-container {
+  position: relative;
+  max-width: 600px;
+  width: 100%;
+
+}
+
+
+/* Input de búsqueda con borde sólido */
+.search-input {
+  padding-left: 2rem;
+  border: 2px solid gray !important;
+  background-color: #fff !important;
+  color: gray;
+  border-radius: 20px;
+  transition: border-color 0.3s;
+}
+
+/* Al enfocar */
+.search-input:focus {
+  outline: none;
+  border-color: gray !important;
+  box-shadow: none !important;
+}
+
+/* Ícono dentro del input */
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: gray;
+}
+
+
+/* --- Nav Links --- */
+.navbar-nav .nav-link {
+  font-weight: 500;
+  color: #495057 !important;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #FF4D00 !important;
+}
+
+.dropdown-toggle::after {
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.dropdown:hover .dropdown-toggle::after {
+  transform: rotate(180deg);
+}
+
+/* --- Mega Menu --- */
+.mega-menu {
+  position: absolute !important;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 1.5rem 0;
+  background: #fff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border: none;
+}
+
+.mega-menu-category {
+  margin-bottom: 1rem;
+}
+
+.mega-menu-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #FF4D00;
+  display: inline-block;
+}
+
+.mega-menu-item {
+  padding: 0.5rem 1rem;
+  color: #495057;
+  text-decoration: none;
+  display: block;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-bottom: 0.25rem;
+  border-left: 3px solid transparent;
+}
+
+.mega-menu-item:hover {
+  background-color: #e3f2fd;
+  color: #FF4D00;
+  border-left-color: #FF4D00;
+  transform: translateX(3px);
+}
+
+/* --- Perfil Avatar --- */
+.perfil-avatar {
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
+}
+
+/* --- Carrito --- */
+.nav-item .fa-shopping-cart {
+  color: #495057;
+  transition: color 0.3s ease;
+}
+
+.nav-item .fa-shopping-cart:hover {
+  color: #FF4D00;
+}
+
+.badge {
+  font-size: 0.7rem;
+  padding: 0.35em 0.45em;
+}
+
+/* --- Responsive --- */
+@media (max-width: 991.98px) {
+  .mega-menu {
+    position: relative !important;
+    width: auto;
+    box-shadow: none;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+  }
+
+  .search-container {
+    max-width: 100%;
+    margin: 1rem 0;
+  }
+}
