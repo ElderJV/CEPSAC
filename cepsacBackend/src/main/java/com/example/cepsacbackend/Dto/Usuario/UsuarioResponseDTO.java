@@ -20,9 +20,10 @@ public class UsuarioResponseDTO {
     private String numeroCelular;
     private String numeroIdentificacion;
 
-    // Campos de respuesta País y Tipo
+    // pais y tipo response
     private Short idPais;
     private String nombrePais;
+    private String codigoTelefono;
     private Short idTipoIdentificacion;
     private String nombreTipoIdentificacion;
 }

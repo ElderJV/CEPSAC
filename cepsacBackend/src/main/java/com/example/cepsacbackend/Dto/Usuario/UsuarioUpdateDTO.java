@@ -42,8 +42,8 @@ public class UsuarioUpdateDTO {
 
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 8, max = 128, message = "La contraseña debe tener entre 8 y 128 caracteres")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]",
-            message = "La contraseña debe contener al menos: 1 minúscula, 1 mayúscula, 1 número y 1 carácter especial")
+    @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).*",
+        message = "La contraseña debe contener al menos: 1 minúscula, 1 mayúscula, 1 número y 1 carácter especial (@$!%*?&)")
     private String password;
 
     @Enumerated(EnumType.STRING)

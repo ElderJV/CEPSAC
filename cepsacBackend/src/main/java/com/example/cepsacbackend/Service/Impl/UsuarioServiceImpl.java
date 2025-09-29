@@ -1,22 +1,22 @@
 package com.example.cepsacbackend.Service.Impl;
 
 import com.example.cepsacbackend.Dto.Usuario.UsuarioCreateDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioPatchDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioResponseDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateDTO;
-import com.example.cepsacbackend.Dto.Usuario.UsuarioPatchDTO;
 import com.example.cepsacbackend.Entity.Pais;
 import com.example.cepsacbackend.Entity.TipoIdentificacion;
 import com.example.cepsacbackend.Entity.Usuario;
+import com.example.cepsacbackend.Enums.EstadoUsuario;
+import com.example.cepsacbackend.Enums.Rol;
 import com.example.cepsacbackend.Mapper.UsuarioMapper;
 import com.example.cepsacbackend.Repository.PaisRepository;
 import com.example.cepsacbackend.Repository.TipoIdentificacionRepository;
 import com.example.cepsacbackend.Repository.UsuarioRepository;
 import com.example.cepsacbackend.Service.UsuarioService;
-import com.example.cepsacbackend.Enums.EstadoUsuario;
-import com.example.cepsacbackend.Enums.Rol;
-import org.springframework.cache.annotation.Cacheable;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +59,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional(readOnly = true)
     @Cacheable("usuarios")
     public List<UsuarioResponseDTO> listarUsuarios() {
-        System.out.println("🔍 EJECUTANDO CONSULTA A BD - NO DESDE CACHÉ");
         List<Usuario> usuarios = repouser.findAllActivos();
         return usuarioMapper.toResponseDTOList(usuarios);
     }

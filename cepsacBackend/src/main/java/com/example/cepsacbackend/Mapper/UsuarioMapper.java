@@ -35,6 +35,7 @@ public interface UsuarioMapper {
     // mapeo de entidad a responseDTO
     @Mapping(source = "pais.idPais", target = "idPais")
     @Mapping(source = "pais.nombre", target = "nombrePais")
+    @Mapping(source = "pais.codigotelefono", target = "codigoTelefono")
     @Mapping(source = "tipoIdentificacion.idTipoIdentificacion", target = "idTipoIdentificacion")
     @Mapping(source = "tipoIdentificacion.nombre", target = "nombreTipoIdentificacion")
     UsuarioResponseDTO toResponseDTO(Usuario usuario);
