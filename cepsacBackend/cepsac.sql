@@ -92,7 +92,7 @@ CREATE TABLE Descuento (
     Vigente         BOOLEAN DEFAULT TRUE,
     FechaInicio     DATE,
     FechaFin        DATE,
-    IdUsuario       SMALLINT UNSIGNED, -- Usuario que creó/modificó
+    IdUsuario       SMALLINT UNSIGNED, -- ⬅️ Auditoría: Usuario que creó/modificó el descuento
     PRIMARY KEY (IdDescuento),
     CONSTRAINT fk_desc_usuario FOREIGN KEY (IdUsuario)
         REFERENCES Usuario(IdUsuario) ON DELETE SET NULL ON UPDATE CASCADE
@@ -100,12 +100,12 @@ CREATE TABLE Descuento (
 
 -- 8.1) APLICACIÓN DE DESCUENTOS
 CREATE TABLE DescuentoAplicacion (
-    IdDescuentoAplicacion    INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    IdDescuento              TINYINT UNSIGNED NOT NULL,
-    TipoAplicacion           ENUM('general','categoria','curso') NOT NULL,
-    IdCategoria              TINYINT UNSIGNED NULL,
-    IdCursoDiplomado         SMALLINT UNSIGNED NULL,
-    IdUsuario                SMALLINT UNSIGNED NULL,
+    IdDescuentoAplicacion      INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    IdDescuento                TINYINT UNSIGNED NOT NULL,
+    TipoAplicacion             ENUM('general','categoria','curso') NOT NULL,
+    IdCategoria                TINYINT UNSIGNED NULL,     -- NULL para 'general' o 'curso'
+    IdCursoDiplomado           SMALLINT UNSIGNED NULL,    -- NULL para 'general' o 'categoria'
+    IdUsuario                  SMALLINT UNSIGNED NULL,    -- ⬅️ Auditoría: Usuario que registra la regla de aplicación
     PRIMARY KEY (IdDescuentoAplicacion),
     CONSTRAINT fk_descap_desc FOREIGN KEY (IdDescuento)
         REFERENCES Descuento(IdDescuento) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -136,20 +136,22 @@ CREATE TABLE ProgramacionCurso (
 
 -- 10) MATRÍCULAS
 CREATE TABLE Matricula (
-    IdMatricula             SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    IdProgramacionCurso     INT UNSIGNED, -- FK a ProgramacionCurso
-    IdAlumno                SMALLINT UNSIGNED, -- FK a Usuario (alumno)
-    IdUsuario               SMALLINT UNSIGNED, -- Usuario que registra la matrícula
-    FechaMatricula          DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Estado                  ENUM('pendiente','pagado','cancelado') DEFAULT 'pendiente',
-    Monto                   DECIMAL(10,2),
-    IdDescuento             TINYINT UNSIGNED, -- FK a Descuento (opcional)
+    IdMatricula               SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    IdProgramacionCurso       INT UNSIGNED,
+    IdAlumno                  SMALLINT UNSIGNED,
+    IdAdministrador                 SMALLINT UNSIGNED,
+    FechaMatricula            DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Estado                    ENUM('pendiente','pagado','cancelado','en proceso') DEFAULT 'pendiente',
+    MontoBase                 DECIMAL(10,2),    -- Monto inicial del curso (antes del descuento)
+    MontoDescontado           DECIMAL(10,2),    -- La cantidad total de dinero descontada ($0.00 si IdDescuento es NULL)
+    Monto                     DECIMAL(10,2),    -- Monto neto final a pagar (MontoBase - MontoDescontado)
+    IdDescuento               TINYINT UNSIGNED, -- Opcional (NULL si no hay descuento)
     PRIMARY KEY (IdMatricula),
     CONSTRAINT fk_mat_progcurso FOREIGN KEY (IdProgramacionCurso)
         REFERENCES ProgramacionCurso(IdAccesoCurso) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT fk_mat_alumno FOREIGN KEY (IdAlumno)
         REFERENCES Usuario(IdUsuario) ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT fk_mat_usuario FOREIGN KEY (IdUsuario)
+    CONSTRAINT fk_mat_usuario FOREIGN KEY (IdAdministrador)
         REFERENCES Usuario(IdUsuario) ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT fk_mat_desc FOREIGN KEY (IdDescuento)
         REFERENCES Descuento(IdDescuento) ON DELETE SET NULL ON UPDATE CASCADE
