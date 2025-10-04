@@ -17,8 +17,8 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IdUsuario")
-    private Short idUsuario;
+    @Column(name = "IdUsuario", columnDefinition = "SMALLINT UNSIGNED")
+    private Integer idUsuario;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Rol")
@@ -38,7 +38,7 @@ public class Usuario {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Estado")
-    private EstadoUsuario estado = EstadoUsuario.activo;
+    private EstadoUsuario estado = EstadoUsuario.ACTIVO;
 
     @Column(name = "NumeroCelular", length = 15)
     private String numeroCelular;

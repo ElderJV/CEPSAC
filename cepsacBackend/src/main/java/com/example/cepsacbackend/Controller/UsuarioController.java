@@ -12,16 +12,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RestController
 @Validated
+@RequiredArgsConstructor
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService userservice;
+    private final UsuarioService userservice;
 
     @GetMapping("/listar")
     public List<UsuarioResponseDTO> listarUsuarios() {
@@ -34,7 +35,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/obtener/{idUsuario}")
-    public ResponseEntity<UsuarioResponseDTO> obtenerUsuario(@PathVariable Short idUsuario) {
+    public ResponseEntity<UsuarioResponseDTO> obtenerUsuario(@PathVariable Integer idUsuario) {
         try {
             UsuarioResponseDTO usuarioDTO = userservice.obtenerUsuario(idUsuario);
             return ResponseEntity.ok(usuarioDTO);
@@ -74,7 +75,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/eliminar/{idUsuario}")
-    public ResponseEntity<String> eliminarUsuario(@PathVariable Short idUsuario) {
+    public ResponseEntity<String> eliminarUsuario(@PathVariable Integer idUsuario) {
         try {
             userservice.eliminarUsuario(idUsuario);
             return ResponseEntity.ok("Usuario suspendido/eliminado correctamente");
@@ -84,7 +85,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/restaurar/{idUsuario}")
-    public ResponseEntity<UsuarioResponseDTO> restaurarUsuario(@PathVariable Short idUsuario) {
+    public ResponseEntity<UsuarioResponseDTO> restaurarUsuario(@PathVariable Integer idUsuario) {
         try {
             UsuarioResponseDTO usuarioRestaurado = userservice.restaurarUsuario(idUsuario);
             return ResponseEntity.ok(usuarioRestaurado);

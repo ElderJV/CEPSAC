@@ -17,12 +17,12 @@ CREATE TABLE TipoIdentificacion (
 -- 3) USUARIOS
 CREATE TABLE Usuario (
     IdUsuario               SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    Rol                     ENUM('administrador','docente','alumno','otro') NOT NULL,
+    Rol                     ENUM('ADMINISTRADOR','DOCENTE','ALUMNO') NOT NULL,
     Nombre                  VARCHAR(50) NOT NULL,
     Apellido                VARCHAR(50),
     Correo                  VARCHAR(255),
     Password                VARCHAR(255),
-    Estado                  ENUM('activo','inactivo','suspendido') DEFAULT 'activo',
+    Estado                  ENUM('ACTIVO','INACTIVO','SUSPENDIDO') DEFAULT 'activo',
     IdCodigoPais            TINYINT UNSIGNED,
     NumeroCelular           VARCHAR(15),
     IdTipoIdentificacion    TINYINT UNSIGNED,
@@ -38,9 +38,10 @@ CREATE TABLE Usuario (
 -- 4) MÉTODOS DE PAGO
 CREATE TABLE MetodoPago (
     IdMetodoPago    TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    TipoMetodo      ENUM('efectivo','transferencia','yape','plin') NOT NULL,
+    TipoMetodo      ENUM('EFECTIVO','TRANSFERENCIA','YAPE','PLIN') NOT NULL,
     Descripcion     VARCHAR(100),
     Requisitos      VARCHAR(500),
+    Estado          BOOLEAN DEFAULT TRUE,
     PRIMARY KEY (IdMetodoPago)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -87,7 +88,7 @@ CREATE TABLE CursoDiplomado (
 -- 8) DESCUENTOS
 CREATE TABLE Descuento (
     IdDescuento     TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    TipoDescuento   ENUM('porcentaje','monto') NOT NULL,
+    TipoDescuento   ENUM('PORCENTAJE','MONTO') NOT NULL,
     Valor           DECIMAL(8,2) NOT NULL,
     Vigente         BOOLEAN DEFAULT TRUE,
     FechaInicio     DATE,
@@ -102,7 +103,7 @@ CREATE TABLE Descuento (
 CREATE TABLE DescuentoAplicacion (
     IdDescuentoAplicacion      INT UNSIGNED NOT NULL AUTO_INCREMENT,
     IdDescuento                TINYINT UNSIGNED NOT NULL,
-    TipoAplicacion             ENUM('general','categoria','curso') NOT NULL,
+    TipoAplicacion             ENUM('GENERAL','CATEGORIA','CURSO') NOT NULL,
     IdCategoria                TINYINT UNSIGNED NULL,     -- NULL para 'general' o 'curso'
     IdCursoDiplomado           SMALLINT UNSIGNED NULL,    -- NULL para 'general' o 'categoria'
     IdUsuario                  SMALLINT UNSIGNED NULL,    -- usuario que registra la regla de aplicacion
@@ -119,15 +120,16 @@ CREATE TABLE DescuentoAplicacion (
 
 -- 9) PROGRAMACIONES DE CURSO
 CREATE TABLE ProgramacionCurso (
-    IdAccesoCurso       INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    Modalidad           ENUM('presencial','virtual','24/7') DEFAULT 'virtual',
+    IdProgramacionCurso       INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    Modalidad           ENUM('PRESENCIAL','VIRTUAL','VIRTUAL_24_7') DEFAULT 'VIRTUAL',
     DuracionCurso       DECIMAL(6,2),
     HorasSemanales      DECIMAL(6,2),
     FechaInicio         DATE,
     FechaFin            DATE,
     IdUsuario           SMALLINT UNSIGNED, -- Docente/administrador responsable
     IdCursoDiplomado    SMALLINT UNSIGNED,
-    PRIMARY KEY (IdAccesoCurso),
+    Monto               DECIMAL(10,2), -- Precio base del curso programado
+    PRIMARY KEY (IdProgramacionCurso),
     CONSTRAINT fk_prog_usuario FOREIGN KEY (IdUsuario)
         REFERENCES Usuario(IdUsuario) ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT fk_prog_cursod FOREIGN KEY (IdCursoDiplomado)
@@ -141,14 +143,14 @@ CREATE TABLE Matricula (
     IdAlumno                  SMALLINT UNSIGNED,
     IdAdministrador                 SMALLINT UNSIGNED,
     FechaMatricula            DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Estado                    ENUM('pendiente','pagado','cancelado','en proceso') DEFAULT 'pendiente',
+    Estado                    ENUM('PENDIENTE','PAGADO','CANCELADO','EN_PROCESO') DEFAULT 'PENDIENTE',
     MontoBase                 DECIMAL(10,2),    -- Monto inicial del curso (antes del descuento)
     MontoDescontado           DECIMAL(10,2),    -- La cantidad total de dinero descontada (S/.0.00 si IdDescuento es NULL)
     Monto                     DECIMAL(10,2),    -- Monto neto final a pagar (MontoBase - MontoDescontado)
     IdDescuento               TINYINT UNSIGNED, -- Opcional (NULL si no hay descuento)
     PRIMARY KEY (IdMatricula),
     CONSTRAINT fk_mat_progcurso FOREIGN KEY (IdProgramacionCurso)
-        REFERENCES ProgramacionCurso(IdAccesoCurso) ON DELETE RESTRICT ON UPDATE CASCADE,
+        REFERENCES ProgramacionCurso(IdProgramacionCurso) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT fk_mat_alumno FOREIGN KEY (IdAlumno)
         REFERENCES Usuario(IdUsuario) ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT fk_mat_usuario FOREIGN KEY (IdAdministrador)

@@ -20,7 +20,7 @@ public class UsuarioPatchDTO {
 
     @NotNull(message = "El ID del usuario es obligatorio")
     @Positive(message = "El ID del usuario debe ser un número positivo")
-    private Short idUsuario;
+    private Integer idUsuario;
 
     // campos opcionales para patch
     @Enumerated(EnumType.STRING)

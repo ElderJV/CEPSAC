@@ -42,7 +42,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !usuario.getEstado().equals(EstadoUsuario.suspendido);
+        return !usuario.getEstado().equals(EstadoUsuario.SUSPENDIDO);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         // importante habilitar usuario si esta activo
-        return usuario.getEstado().equals(EstadoUsuario.activo);
+        return usuario.getEstado().equals(EstadoUsuario.ACTIVO);
     }
 }
 

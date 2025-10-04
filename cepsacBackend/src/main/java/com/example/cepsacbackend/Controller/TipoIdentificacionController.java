@@ -2,21 +2,22 @@ package com.example.cepsacbackend.Controller;
 
 import com.example.cepsacbackend.Entity.TipoIdentificacion;
 import com.example.cepsacbackend.Repository.TipoIdentificacionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/tiposidentificacion")
 public class TipoIdentificacionController {
 
-    @Autowired
-    private TipoIdentificacionRepository repotipoidentificacion;
+    private final TipoIdentificacionRepository repotipoidentificacion;
 
     @GetMapping("/listar")
     public List<TipoIdentificacion> listarTiposIdentificacion() {
+
         return repotipoidentificacion.findAll();
     }
 

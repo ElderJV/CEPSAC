@@ -14,8 +14,8 @@ import com.example.cepsacbackend.Repository.PaisRepository;
 import com.example.cepsacbackend.Repository.TipoIdentificacionRepository;
 import com.example.cepsacbackend.Repository.UsuarioRepository;
 import com.example.cepsacbackend.Service.UsuarioService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,22 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
-    @Autowired
-    private  UsuarioRepository repouser;
-
-    @Autowired
-    private PaisRepository repopais;
-
-    @Autowired
-    private TipoIdentificacionRepository repotipo;
-
-    @Autowired
-    private UsuarioMapper usuarioMapper;
-
-    @Autowired
-    private  PasswordEncoder passwordEncoder;
+    private final UsuarioRepository repouser;
+    private final PaisRepository repopais;
+    private final TipoIdentificacionRepository repotipo;
+    private final UsuarioMapper usuarioMapper;
+    private final PasswordEncoder passwordEncoder;
 
     private Pais resolverPais(String nombrePais) {
         if (nombrePais == null || nombrePais.trim().isEmpty()) {
@@ -68,7 +60,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional(readOnly = true)
-    public UsuarioResponseDTO obtenerUsuario(Short idUsuario) {
+    public UsuarioResponseDTO obtenerUsuario(Integer idUsuario) {
         Usuario usuario = repouser.findByIdActivo(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
         return usuarioMapper.toResponseDTO(usuario);
@@ -121,23 +113,23 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public void eliminarUsuario(Short idUsuario) {
+    public void eliminarUsuario(Integer idUsuario) {
         Usuario usuario = repouser.findByIdActivo(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
-        usuario.setEstado(EstadoUsuario.suspendido);
+        usuario.setEstado(EstadoUsuario.SUSPENDIDO);
         repouser.save(usuario);
     }
 
     //metodo para restaurar usuario suspendido
     @Transactional
     @Override
-    public UsuarioResponseDTO restaurarUsuario(Short idUsuario) {
+    public UsuarioResponseDTO restaurarUsuario(Integer idUsuario) {
         Usuario usuario = repouser.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
-        if (usuario.getEstado() != EstadoUsuario.suspendido) {
+        if (usuario.getEstado() != EstadoUsuario.SUSPENDIDO) {
             throw new RuntimeException("El usuario no está suspendido/eliminado");
         }
-        usuario.setEstado(EstadoUsuario.activo);
+        usuario.setEstado(EstadoUsuario.ACTIVO);
         Usuario usuarioRestaurado = repouser.save(usuario);
         return usuarioMapper.toResponseDTO(usuarioRestaurado);
     }

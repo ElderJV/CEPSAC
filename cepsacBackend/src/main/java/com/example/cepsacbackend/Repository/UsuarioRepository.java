@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Short> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByCorreo(String correo);
     List<Usuario> findByEstado(EstadoUsuario estado);
 
@@ -19,7 +19,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Short> {
     List<Usuario> findAllActivos();
 
     @Query("SELECT u FROM Usuario u LEFT JOIN FETCH u.pais LEFT JOIN FETCH u.tipoIdentificacion WHERE u.estado != 'suspendido' AND u.idUsuario = :id")
-    Optional<Usuario> findByIdActivo(@Param("id") Short id);
+    Optional<Usuario> findByIdActivo(@Param("id") Integer id);
 
     @Query("SELECT u FROM Usuario u LEFT JOIN FETCH u.pais LEFT JOIN FETCH u.tipoIdentificacion WHERE u.estado != 'suspendido' AND u.correo = :correo")
     Optional<Usuario> findByCorreoActivo(@Param("correo") String correo);

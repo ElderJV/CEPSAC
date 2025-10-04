@@ -15,7 +15,7 @@ public class Pais {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IdPais")
+    @Column(name = "IdPais" , columnDefinition = "TINYINT UNSIGNED")
     private Short idPais;
 
     @Column(name = "Nombre", nullable = false, length = 50)

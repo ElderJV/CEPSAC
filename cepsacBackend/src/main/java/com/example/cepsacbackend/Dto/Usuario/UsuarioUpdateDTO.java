@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class UsuarioUpdateDTO {
 
     @NotNull(message = "El ID del usuario es obligatorio para actualización")
-    private Short idUsuario;
+    private Integer idUsuario;
 
     @NotNull(message = "El rol es obligatorio")
     @Enumerated(EnumType.STRING)

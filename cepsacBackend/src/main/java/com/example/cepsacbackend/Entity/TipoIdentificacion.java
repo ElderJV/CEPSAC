@@ -15,7 +15,7 @@ public class TipoIdentificacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IdTipoIdentificacion")
+    @Column(name = "IdTipoIdentificacion", columnDefinition = "TINYINT UNSIGNED")
     private Short idTipoIdentificacion;
 
     @Column(name = "Nombre", nullable = false, length = 50)

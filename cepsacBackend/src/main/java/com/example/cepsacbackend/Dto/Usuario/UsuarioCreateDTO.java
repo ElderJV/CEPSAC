@@ -44,7 +44,7 @@ public class UsuarioCreateDTO {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private EstadoUsuario estado = EstadoUsuario.activo;
+    private EstadoUsuario estado = EstadoUsuario.ACTIVO;
 
     @Pattern(regexp = "^[+]?[0-9\\s\\-()]{7,15}$", message = "Formato de número celular inválido")
     @Size(max = 15, message = "El número celular no puede exceder 15 caracteres")

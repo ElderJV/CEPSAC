@@ -2,18 +2,18 @@ package com.example.cepsacbackend.Controller;
 
 import com.example.cepsacbackend.Entity.Pais;
 import com.example.cepsacbackend.Repository.PaisRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/paises")
 public class PaisController {
 
-    @Autowired
-    private PaisRepository repopais;
+    private final PaisRepository repopais;
 
     @GetMapping("/listar")
     public List<Pais> listarPaises() {

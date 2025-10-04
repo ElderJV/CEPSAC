@@ -11,12 +11,12 @@ import java.util.List;
 public interface UsuarioService {
 
     List<UsuarioResponseDTO> listarUsuarios();
-    UsuarioResponseDTO obtenerUsuario(Short idUsuario);
+    UsuarioResponseDTO obtenerUsuario(Integer idUsuario);
     UsuarioResponseDTO crearUsuario(UsuarioCreateDTO dto);
     UsuarioResponseDTO actualizarUsuario(UsuarioUpdateDTO dto);
     UsuarioResponseDTO actualizarUsuarioParcialmente(UsuarioPatchDTO dto);
-    void eliminarUsuario(Short idUsuario);
+    void eliminarUsuario(Integer idUsuario);
 
-    UsuarioResponseDTO restaurarUsuario(Short idUsuario);
+    UsuarioResponseDTO restaurarUsuario(Integer idUsuario);
     List<UsuarioResponseDTO> listarUsuariosPorRol(Rol rol);
 }
