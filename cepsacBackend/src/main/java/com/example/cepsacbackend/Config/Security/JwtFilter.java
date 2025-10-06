@@ -44,14 +44,13 @@ public class JwtFilter extends OncePerRequestFilter {
             return; //si no hay token detenemos flujo
         }
 
-        // traemos token y username osea correo
+        // traemos token y username
         tokenJwt = encabezadoAuth.substring(7);
         nombreUsuario = servicioJwt.extraerNombreUsuario(tokenJwt);
 
         // validamos token
         if (nombreUsuario != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails detallesUsuario = this.servicioDetallesUsuario.loadUserByUsername(nombreUsuario);
-
             if (servicioJwt.esTokenValido(tokenJwt, detallesUsuario)) {
                 // autenticamos
                 UsernamePasswordAuthenticationToken tokenAutenticacion = new UsernamePasswordAuthenticationToken(

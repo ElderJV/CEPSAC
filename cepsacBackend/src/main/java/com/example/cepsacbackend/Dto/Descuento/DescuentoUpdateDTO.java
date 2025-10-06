@@ -7,8 +7,15 @@ import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class DescuentoUpdateDTO {
+
     @NotNull
     private Short idDescuento;
 
