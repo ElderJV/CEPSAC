@@ -48,13 +48,13 @@ export class FooterComponent {
   public contactInfo: ContactInfo[] = [
     {
       url: 'https://wa.me/51956782481',
-      iconClass: 'fab fa-whatsapp',
+      iconClass: 'bi bi-whatsapp', // Corregido
       text: '+51 956 782 481',
       ariaLabel: 'Contactar por WhatsApp',
     },
     {
       url: 'mailto:info@cedpsac.com',
-      iconClass: 'fas fa-envelope',
+      iconClass: 'bi bi-envelope-fill', // Corregido
       text: 'info@cedpsac.com',
       ariaLabel: 'Enviar correo electrónico',
     },
@@ -63,17 +63,17 @@ export class FooterComponent {
   public socialLinks: SocialLink[] = [
     {
       url: '#',
-      iconClass: 'fab fa-facebook-f',
+      iconClass: 'bi bi-facebook', // Corregido
       ariaLabel: 'Visita nuestra página de Facebook',
     },
     {
       url: '#',
-      iconClass: 'fab fa-instagram',
+      iconClass: 'bi bi-instagram', // Corregido
       ariaLabel: 'Síguenos en Instagram',
     },
     {
       url: '#',
-      iconClass: 'fab fa-linkedin-in',
+      iconClass: 'bi bi-linkedin', // Corregido
       ariaLabel: 'Conecta con nosotros en LinkedIn',
     },
   ];
@@ -83,7 +83,7 @@ export class FooterComponent {
     if (type === 'privacy') {
       this.modalTitle = 'Políticas de Privacidad';
       this.modalContent = `
-        <p>📅 <strong>Última actualización: 02/10/2025</strong></p>
+        <p>📅 <strong>Última actualización: 10/10/2025</strong></p>
         <p>En <strong>CEDP S.A.C.</strong> nos comprometemos a proteger la privacidad y seguridad de nuestros usuarios.</p>
         <p>Recopilamos y tratamos datos personales como nombre, correo electrónico, número de teléfono,
         información de facturación y matrícula, únicamente con fines académicos, administrativos y de facturación.</p>
@@ -96,7 +96,7 @@ export class FooterComponent {
     } else {
       this.modalTitle = 'Términos y Condiciones';
       this.modalContent = `
-        <p>📅 <strong>Última actualización: 02/10/2025</strong></p>
+        <p>📅 <strong>Última actualización: 10/10/2025</strong></p>
         <p>Al acceder y utilizar los servicios de <strong>CEDP S.A.C.</strong>, el usuario acepta los siguientes Términos y Condiciones:</p>
         <ul>
           <li><strong>Registro:</strong> El usuario debe proporcionar datos verídicos al momento de registrarse.</li>

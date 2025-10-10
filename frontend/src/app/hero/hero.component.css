@@ -1,31 +1,86 @@
-/* ESTILO BOTÓN WHATSAPP */
-.whatsapp-float {
+/* ===== BOTÓN FLOTANTE ===== */
+.whatsapp-float-pulse {
+  /* --- Posicionamiento --- */
   position: fixed;
-  width: 90px;
-  height: 90px;
-  bottom: 40px;
-  right: 40px;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+
+  /* --- Estilo del contenedor --- */
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  /* --- Transición para el texto --- */
+  transition: all 0.4s ease;
+}
+
+/* --- Círculo del ícono --- */
+.whatsapp-float-pulse i {
+  width: 60px;
+  height: 60px;
   background-color: #25d366;
   color: #fff;
-  border-radius: 50px;
-  text-align: center;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
-  z-index: 100;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
+  font-size: 32px;
+
+  /* --- Aplicar la animación de pulso --- */
+  animation: pulse 2s infinite;
 }
 
-.whatsapp-float:hover {
-  transform: scale(1.1);
+/* --- Estilo del texto --- */
+.whatsapp-float-pulse .whatsapp-text {
+  /* --- Oculto por defecto --- */
+  visibility: hidden;
+  opacity: 0;
+
+  /* --- Estilo de la burbuja de texto --- */
+  margin-right: 10px;
+  padding: 8px 12px;
+  background-color: #fff;
+  color: #333;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+  font-weight: 500;
+
+  /* --- Transición para aparecer suavemente --- */
+  transition: all 0.4s ease;
 }
 
-@media (max-width: 767.98px) {
-  .whatsapp-float {
-    width: 70px;
-    height: 70px;
-    bottom: 20px;
-    right: 20px;
+/* --- Mostrar el texto al pasar el mouse por encima del enlace --- */
+.whatsapp-float-pulse:hover .whatsapp-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* --- Detener la animación al pasar el mouse para no distraer --- */
+.whatsapp-float-pulse:hover i {
+  animation: none;
+}
+
+/* --- Keyframes para la animación de pulso --- */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  .whatsapp-float-pulse .whatsapp-text {
+    display: none;
   }
 }
