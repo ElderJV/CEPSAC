@@ -13,6 +13,5 @@ public record MatriculaResponseDTO(
     EstadoMatricula estado,
     BigDecimal montoBase,
     BigDecimal montoDescontado,
-    BigDecimal monto,
-    Short idDescuento
+    BigDecimal monto
 ) {}

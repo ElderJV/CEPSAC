@@ -29,9 +29,8 @@ public class Matricula {
     @JoinColumn(name = "IdAlumno", nullable = false)
     private Usuario alumno; // fk a usuario (alumno)
 
-    // id admin, nulo inicial
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "IdAdministrador", columnDefinition = "SMALLINT UNSIGNED")
+    @JoinColumn(name = "IdAdministrador")
     private Usuario administradorAprobador;
 
     @Column(name = "FechaMatricula", updatable = false)
@@ -41,7 +40,7 @@ public class Matricula {
     @Column(name = "Estado", nullable = false)
     private EstadoMatricula estado = EstadoMatricula.PENDIENTE;
 
-    @Column(name = "MontoBase", precision = 10, scale = 2, columnDefinition = "DECIMAL(8,2)")
+    @Column(name = "MontoBase", precision = 10, scale = 2)
     private BigDecimal montoBase;
 
     @Column(name = "MontoDescontado", precision = 10, scale = 2)
@@ -50,7 +49,7 @@ public class Matricula {
     @Column(name = "Monto", precision = 10, scale = 2)
     private BigDecimal monto;
 
-    @Column(name = "IdDescuento")
-    private Short idDescuento;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "IdDescuento")
+    private Descuento descuento;
 }

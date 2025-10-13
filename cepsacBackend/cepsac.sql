@@ -127,7 +127,7 @@ CREATE TABLE ProgramacionCurso (
     FechaInicio         DATE,
     FechaFin            DATE,
     IdUsuario           SMALLINT UNSIGNED, -- Docente/administrador responsable
-    IdCursoDiplomado    SMALLINT UNSIGNED,
+    IdCursoDiplomado    SMALLINT UNSIGNED NOT NULL,
     Monto               DECIMAL(10,2), -- Precio base del curso programado
     PRIMARY KEY (IdProgramacionCurso),
     CONSTRAINT fk_prog_usuario FOREIGN KEY (IdUsuario)

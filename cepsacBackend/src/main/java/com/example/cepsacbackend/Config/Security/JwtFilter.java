@@ -27,10 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
         final String path = request.getServletPath();
         // permitir la ruta de autenticación sin filtrar
-        if (path.contains("/api/auth/login")) {
-            return true;
-        }
-        return false; // para las demás rutas el filtro se ejecuta
+        return path.contains("/api/auth/login");
     }
 
     @Override

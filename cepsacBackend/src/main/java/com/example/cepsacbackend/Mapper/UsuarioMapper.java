@@ -1,16 +1,19 @@
 package com.example.cepsacbackend.Mapper;
 
-import com.example.cepsacbackend.Entity.Usuario;
-import com.example.cepsacbackend.Dto.Usuario.UsuarioResponseDTO;
-import com.example.cepsacbackend.Dto.Usuario.UsuarioCreateDTO;
-import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateDTO;
-import com.example.cepsacbackend.Dto.Usuario.UsuarioPatchDTO;
+import java.util.List;
+
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import java.util.List;
+
+import com.example.cepsacbackend.Dto.Usuario.UsuarioCreateDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioListResponseDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioPatchDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioResponseDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateDTO;
+import com.example.cepsacbackend.Entity.Usuario;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {
@@ -38,7 +41,14 @@ public interface UsuarioMapper {
     @Mapping(source = "pais.codigotelefono", target = "codigoTelefono")
     @Mapping(source = "tipoIdentificacion.idTipoIdentificacion", target = "idTipoIdentificacion")
     @Mapping(source = "tipoIdentificacion.nombre", target = "nombreTipoIdentificacion")
+    @Mapping(target = "activo", expression = "java(usuario.getEstado() == com.example.cepsacbackend.Enums.EstadoUsuario.ACTIVO)")
     UsuarioResponseDTO toResponseDTO(Usuario usuario);
 
     List<UsuarioResponseDTO> toResponseDTOList(List<Usuario> usuarios);
+
+    // mapeo de entidad a listResponseDTO
+    @Mapping(target = "activo", expression = "java(usuario.getEstado() == com.example.cepsacbackend.Enums.EstadoUsuario.ACTIVO)")
+    UsuarioListResponseDTO toListResponseDTO(Usuario usuario);
+
+    List<UsuarioListResponseDTO> toListResponseDTOList(List<Usuario> usuarios);
 }

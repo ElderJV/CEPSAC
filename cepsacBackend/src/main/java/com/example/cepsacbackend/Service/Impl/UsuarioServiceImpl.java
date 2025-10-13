@@ -1,6 +1,7 @@
 package com.example.cepsacbackend.Service.Impl;
 
 import com.example.cepsacbackend.Dto.Usuario.UsuarioCreateDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioListResponseDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioPatchDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioResponseDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateDTO;
@@ -17,6 +18,7 @@ import com.example.cepsacbackend.Service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
-    private final UsuarioRepository repouser;
+    private final UsuarioRepository usuarioRepository;
     private final PaisRepository repopais;
     private final TipoIdentificacionRepository repotipo;
     private final UsuarioMapper usuarioMapper;
@@ -53,34 +55,36 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional(readOnly = true)
     @Cacheable("usuarios")
-    public List<UsuarioResponseDTO> listarUsuarios() {
-        List<Usuario> usuarios = repouser.findAllActivos();
-        return usuarioMapper.toResponseDTOList(usuarios);
+    public List<UsuarioListResponseDTO> listarUsuarios() {
+        List<Usuario> usuarios = usuarioRepository.findAllActivos();
+        return usuarioMapper.toListResponseDTOList(usuarios);
     }
 
     @Override
     @Transactional(readOnly = true)
     public UsuarioResponseDTO obtenerUsuario(Integer idUsuario) {
-        Usuario usuario = repouser.findByIdActivo(idUsuario)
+        Usuario usuario = usuarioRepository.findByIdActivo(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
         return usuarioMapper.toResponseDTO(usuario);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "usuarios", allEntries = true)
     public UsuarioResponseDTO crearUsuario(UsuarioCreateDTO dto) {
         Usuario usuario = usuarioMapper.toEntity(dto);
         usuario.setPais(resolverPais(dto.getNombrePais()));
         usuario.setTipoIdentificacion(resolverTipoIdentificacion(dto.getIdTipoIdentificacion()));
         usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
-        Usuario nuevoUsuario = repouser.save(usuario);
+        Usuario nuevoUsuario = usuarioRepository.save(usuario);
         return usuarioMapper.toResponseDTO(nuevoUsuario);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "usuarios", allEntries = true)
     public UsuarioResponseDTO actualizarUsuario(UsuarioUpdateDTO dto) {
-        Usuario usuarioExistente = repouser.findById(dto.getIdUsuario())
+        Usuario usuarioExistente = usuarioRepository.findById(dto.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + dto.getIdUsuario()));
         usuarioMapper.updateEntityFromUpdateDTO(dto, usuarioExistente);
         usuarioExistente.setPais(resolverPais(dto.getNombrePais()));
@@ -88,14 +92,15 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
             usuarioExistente.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
-        Usuario usuarioActualizado = repouser.save(usuarioExistente);
+        Usuario usuarioActualizado = usuarioRepository.save(usuarioExistente);
         return usuarioMapper.toResponseDTO(usuarioActualizado);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "usuarios", allEntries = true)
     public UsuarioResponseDTO actualizarUsuarioParcialmente(UsuarioPatchDTO dto) {
-        Usuario usuarioExistente = repouser.findById(dto.getIdUsuario())
+        Usuario usuarioExistente = usuarioRepository.findById(dto.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + dto.getIdUsuario()));
         usuarioMapper.updateEntityFromPatchDTO(dto, usuarioExistente);
         if (dto.getNombrePais() != null) {
@@ -107,37 +112,39 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
             usuarioExistente.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
-        Usuario usuarioActualizado = repouser.save(usuarioExistente);
+        Usuario usuarioActualizado = usuarioRepository.save(usuarioExistente);
         return usuarioMapper.toResponseDTO(usuarioActualizado);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "usuarios", allEntries = true)
     public void eliminarUsuario(Integer idUsuario) {
-        Usuario usuario = repouser.findByIdActivo(idUsuario)
+        Usuario usuario = usuarioRepository.findByIdActivo(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
         usuario.setEstado(EstadoUsuario.SUSPENDIDO);
-        repouser.save(usuario);
+        usuarioRepository.save(usuario);
     }
 
     //metodo para restaurar usuario suspendido
     @Transactional
     @Override
+    @CacheEvict(value = "usuarios", allEntries = true)
     public UsuarioResponseDTO restaurarUsuario(Integer idUsuario) {
-        Usuario usuario = repouser.findById(idUsuario)
+        Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
         if (usuario.getEstado() != EstadoUsuario.SUSPENDIDO) {
             throw new RuntimeException("El usuario no está suspendido/eliminado");
         }
         usuario.setEstado(EstadoUsuario.ACTIVO);
-        Usuario usuarioRestaurado = repouser.save(usuario);
+        Usuario usuarioRestaurado = usuarioRepository.save(usuario);
         return usuarioMapper.toResponseDTO(usuarioRestaurado);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<UsuarioResponseDTO> listarUsuariosPorRol(Rol rol) {
-        List<Usuario> usuarios = repouser.findByRolActivo(rol);
-        return usuarioMapper.toResponseDTOList(usuarios);
+    public List<UsuarioListResponseDTO> listarUsuariosPorRol(Rol rol) {
+        List<Usuario> usuarios = usuarioRepository.findByRolActivo(rol);
+        return usuarioMapper.toListResponseDTOList(usuarios);
     }
 }

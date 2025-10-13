@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Descuento")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,7 +30,7 @@ public class Descuento {
     private BigDecimal valor;
 
     @Column(name = "Vigente")
-    private Boolean vigente;
+    private Boolean vigente = true;
 
     @Column(name = "FechaInicio")
     private LocalDate fechaInicio;

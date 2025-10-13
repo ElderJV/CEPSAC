@@ -13,32 +13,32 @@ import java.util.Optional;
 @RequestMapping("/api/paises")
 public class PaisController {
 
-    private final PaisRepository repopais;
+    private final PaisRepository paisRepository;
 
     @GetMapping("/listar")
     public List<Pais> listarPaises() {
-        return repopais.findAll();
+        return paisRepository.findAll();
     }
 
     @PostMapping("/obtener")
     public Pais obtenerPais(@RequestBody Short idPais) {
-        Optional<Pais> pais = repopais.findById(idPais);
+        Optional<Pais> pais = paisRepository.findById(idPais);
         return pais.orElse(null);
     }
 
     @PostMapping("/crear")
     public Pais crearPais(@RequestBody Pais pais) {
-        return repopais.save(pais);
+        return paisRepository.save(pais);
     }
 
     @PostMapping("/actualizar")
     public Pais actualizarPais(@RequestBody Pais pais) {
-        return repopais.save(pais);
+        return paisRepository.save(pais);
     }
 
     @PostMapping("/eliminar")
     public String eliminarPais(@RequestBody Short idPais) {
-        repopais.deleteById(idPais);
+        paisRepository.deleteById(idPais);
         return "País eliminado correctamente";
     }
 }

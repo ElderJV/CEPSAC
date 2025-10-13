@@ -1,16 +1,17 @@
 package com.example.cepsacbackend.Service;
 
+import java.util.List;
+
 import com.example.cepsacbackend.Dto.Usuario.UsuarioCreateDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioListResponseDTO;
+import com.example.cepsacbackend.Dto.Usuario.UsuarioPatchDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioResponseDTO;
 import com.example.cepsacbackend.Dto.Usuario.UsuarioUpdateDTO;
 import com.example.cepsacbackend.Enums.Rol;
-import com.example.cepsacbackend.Dto.Usuario.UsuarioPatchDTO;
-
-import java.util.List;
 
 public interface UsuarioService {
 
-    List<UsuarioResponseDTO> listarUsuarios();
+    List<UsuarioListResponseDTO> listarUsuarios();
     UsuarioResponseDTO obtenerUsuario(Integer idUsuario);
     UsuarioResponseDTO crearUsuario(UsuarioCreateDTO dto);
     UsuarioResponseDTO actualizarUsuario(UsuarioUpdateDTO dto);
@@ -18,5 +19,6 @@ public interface UsuarioService {
     void eliminarUsuario(Integer idUsuario);
 
     UsuarioResponseDTO restaurarUsuario(Integer idUsuario);
-    List<UsuarioResponseDTO> listarUsuariosPorRol(Rol rol);
+    List<UsuarioListResponseDTO> listarUsuariosPorRol(Rol rol);
+
 }

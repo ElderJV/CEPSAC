@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Matrícula</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        #verDetalleBtn {
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        #verDetalleBtn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 25px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        h2, h3 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+        p {
+            line-height: 1.6;
+        }
+        strong {
+            color: #555;
+        }
+        #pagosTabla {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        #pagosTabla th, #pagosTabla td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #pagosTabla th {
+            background-color: #f2f2f2;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        @keyframes slideIn {
+            from {transform: translateY(-50px);}
+            to {transform: translateY(0);}
+        }
+    </style>
+</head>
+<body>
+
+<button id="verDetalleBtn">Ver Detalle de Matrícula (ID: 10)</button>
+
+<!-- El Modal -->
+<div id="detalleModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Detalle de la Matrícula</h2>
+    <div id="modalBody">
+        <!-- El contenido se cargará aquí dinámicamente -->
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById("detalleModal");
+    const btn = document.getElementById("verDetalleBtn");
+    const span = document.getElementsByClassName("close")[0];
+    const modalBody = document.getElementById("modalBody");
+
+    // Abre el modal al hacer clic en el botón
+    btn.onclick = function() {
+        const baseUrl = 'http://localhost:8080';
+        const matriculaId = 10;
+        const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGVqYW5kcm9AZ21haWwuY29tIiwiaWF0IjoxNzYwMjM3MDc1LCJleHAiOjE3NjAzMjM0NzV9.CVtgdDJvSq2TRsw-HsC3LgL6vCTE4zUvdeDsBighsng';
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+
+        modalBody.innerHTML = '<p>Cargando...</p>';
+        modal.style.display = "block";
+
+        fetch(`${baseUrl}/api/matriculas/${matriculaId}/detalle`, { headers })
+            .then(response => {
+                // Si la respuesta no es exitosa (ej: 403, 404, 500)
+                if (!response.ok) {
+                    // Leemos la respuesta como texto para evitar errores de parseo JSON
+                    // en caso de que el servidor devuelva una página de error HTML o texto plano.
+                    return response.text().then(text => {
+                        let errorDetail = text;
+                        try {
+                            // Intentamos parsear como JSON por si el backend sí envió un error estructurado
+                            const jsonError = JSON.parse(text);
+                            errorDetail = jsonError.error || jsonError.message || JSON.stringify(jsonError);
+                        } catch (e) { /* No era JSON, usamos el texto plano */ }
+                        // Lanzamos un error detallado que será capturado por el .catch()
+                        throw new Error(`Error ${response.status} (${response.statusText}): ${errorDetail}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Limpiar el cuerpo del modal
+                modalBody.innerHTML = '';
+
+                // Construir el HTML con la información
+                let htmlContent = `
+                    <h3>Información General</h3>
+                    <p><strong>ID Matrícula:</strong> ${data.idMatricula}</p>
+                    <p><strong>Fecha:</strong> ${new Date(data.fechaMatricula).toLocaleString()}</p>
+                    <p><strong>Estado:</strong> ${data.estado}</p>
+                    <p><strong>Monto Base:</strong> S/ ${data.montoBase.toFixed(2)}</p>
+                    <p><strong>Descuento Aplicado:</strong> S/ ${data.montoDescontado.toFixed(2)}</p>
+                    <p><strong>Monto Final a Pagar:</strong> S/ ${data.monto.toFixed(2)}</p>
+
+                    <h3>Curso/Diplomado</h3>
+                    <p><strong>Título:</strong> ${data.cursoDiplomado.titulo}</p>
+                    <p><strong>Objetivo:</strong> ${data.cursoDiplomado.objetivo}</p>
+
+                    <h3>Alumno</h3>
+                    <p><strong>Nombre:</strong> ${data.alumno.nombre} ${data.alumno.apellido || ''}</p>
+                    <p><strong>Correo:</strong> ${data.alumno.correo}</p>
+                    <p><strong>Celular:</strong> ${data.alumno.numeroCelular || 'No registrado'}</p>
+                `;
+
+                if (data.descuento) {
+                    htmlContent += `
+                        <h3>Descuento</h3>
+                        <p><strong>Tipo:</strong> ${data.descuento.tipoDescuento}</p>
+                        <p><strong>Valor:</strong> ${data.descuento.tipoDescuento === 'PORCENTAJE' ? data.descuento.valor + '%' : 'S/ ' + data.descuento.valor.toFixed(2)}</p>
+                    `;
+                }
+
+                if (data.pagos && data.pagos.length > 0) {
+                    htmlContent += `
+                        <h3>Historial de Pagos</h3>
+                        <table id="pagosTabla">
+                            <thead>
+                                <tr>
+                                    <th># Cuota</th>
+                                    <th>Monto</th>
+                                    <th>Fecha</th>
+                                    <th>Método</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.pagos.map(pago => `
+                                    <tr>
+                                        <td>${pago.numeroCuota || 'N/A'}</td>
+                                        <td>S/ ${pago.monto.toFixed(2)}</td>
+                                        <td>${new Date(pago.fechaPago).toLocaleString()}</td>
+                                        <td>${pago.metodoPagoDescripcion} (${pago.tipoMetodo})</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    htmlContent += '<h3>No se han registrado pagos.</h3>';
+                }
+
+                modalBody.innerHTML = htmlContent;
+            })
+            .catch(error => {
+                modalBody.innerHTML = `<p style="color: red;"><strong>Error al cargar los datos:</strong> ${error.message}</p>`;
+                // Logueo mejorado para dar más contexto en la consola de desarrollador
+                console.error("===== DETALLE DEL ERROR =====");
+                console.error("Mensaje:", error.message);
+                console.error("Objeto de Error Completo:", error);
+            });
+    }
+
+    // Cierra el modal al hacer clic en la 'x'
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Cierra el modal al hacer clic fuera del contenido
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+});
+</script>
+
+</body>
+</html>

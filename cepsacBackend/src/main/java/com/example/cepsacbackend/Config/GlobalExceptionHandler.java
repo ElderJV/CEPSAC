@@ -2,6 +2,7 @@ package com.example.cepsacbackend.Config;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -54,5 +55,12 @@ public class GlobalExceptionHandler {
         error.put("error", ex.getMessage());
 
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Acceso denegado. No tienes los permisos necesarios para realizar esta acción.");
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 }

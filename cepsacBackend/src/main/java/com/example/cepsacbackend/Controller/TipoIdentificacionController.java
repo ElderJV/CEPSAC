@@ -13,33 +13,32 @@ import java.util.Optional;
 @RequestMapping("/api/tiposidentificacion")
 public class TipoIdentificacionController {
 
-    private final TipoIdentificacionRepository repotipoidentificacion;
+    private final TipoIdentificacionRepository tipoRepository;
 
     @GetMapping("/listar")
     public List<TipoIdentificacion> listarTiposIdentificacion() {
-
-        return repotipoidentificacion.findAll();
+        return tipoRepository.findAll();
     }
 
     @PostMapping("/obtener")
     public TipoIdentificacion obtenerTipoIdentificacion(@RequestBody Short idTipoIdentificacion) {
-        Optional<TipoIdentificacion> tipoIdentificacion = repotipoidentificacion.findById(idTipoIdentificacion);
+        Optional<TipoIdentificacion> tipoIdentificacion = tipoRepository.findById(idTipoIdentificacion);
         return tipoIdentificacion.orElse(null);
     }
 
     @PostMapping("/crear")
     public TipoIdentificacion crearTipoIdentificacion(@RequestBody TipoIdentificacion tipoIdentificacion) {
-        return repotipoidentificacion.save(tipoIdentificacion);
+        return tipoRepository.save(tipoIdentificacion);
     }
 
     @PostMapping("/actualizar")
     public TipoIdentificacion actualizarTipoIdentificacion(@RequestBody TipoIdentificacion tipoIdentificacion) {
-        return repotipoidentificacion.save(tipoIdentificacion);
+        return tipoRepository.save(tipoIdentificacion);
     }
 
     @PostMapping("/eliminar")
     public String eliminarTipoIdentificacion(@RequestBody Short idTipoIdentificacion) {
-        repotipoidentificacion.deleteById(idTipoIdentificacion);
+        tipoRepository.deleteById(idTipoIdentificacion);
         return "Tipo de identificación eliminado correctamente";
     }
 }
