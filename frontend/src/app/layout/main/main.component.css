@@ -1,0 +1,15 @@
+/* Paleta de Colores */
+:root {
+  --color-brand: #ff4d00;
+  --color-primary-text: #212529;
+  --color-secondary-text: #495057;
+  --color-light-text: #6c757d;
+  --color-white: #fff;
+  --color-background: #f8f9fa;
+  --color-border: #e9ecef;
+  --color-footer: #1e2837;
+  --color-footer-light: #010777;
+
+  --transition-speed: 0.3s;
+  --transition-ease: ease;
+}
